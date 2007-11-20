@@ -1,0 +1,87 @@
+
+
+  <style type="text/css">
+.ifonefam {
+  width:100%;
+  height:100%;
+  border:none;
+}
+DIV.tablesimple {
+  height:100%;
+  
+}
+   </style>
+<script>document.needreload=true;</script>
+
+<script>
+var selchap=null;
+function openiframe(event,th,docid) {
+  var wfgtop;
+  if (selchap != null) {
+    selchap.className='iconone';
+
+    selchap.style.borderLeftStyle='solid';
+    selchap.style.borderLeftColor='[COLOR_C5]';
+    selchap.style.borderLeftWidth='2px';
+  }
+  if (th) { 
+    th.className='icononesel';
+    selchap=th;
+    selchap.style.color='orange';
+  }
+ 
+
+  var fh=getFrameHeight();
+  var xy=getAnchorPosition("maintable");
+  var nh=fh-xy.y-15;
+
+  if (nh> 100)   document.getElementById("maintable").style.height=nh+'px';
+
+  var idf='chap_'+docid;
+  var nf;
+  var reloadlist=false;
+  nf=document.getElementById(idf);
+  if (nf && (nf.style.display!= 'none')) reloadlist=true;
+  var lif=document.getElementsByTagName('iframe');
+  for (var i=0;i<lif.length;i++) {
+    lif[i].style.display='none';
+  }
+  if (nf) {
+    if (reloadlist) {
+      var isrc;
+      if (window.frames[idf]) {
+	
+	window.frames[idf].location.href='[CORE_STANDURL]&app=FDL&action=FDL_CARD&id='+docid;
+	//	lif=window.frames[idf].document.getElementsByTagName('frame');
+	//      lif=nf.contentDocument.getElementsByTagName('frame');
+	//	if (lif.length >0) {
+	//  isrc=lif[0].src;
+	//	}
+      }
+    }
+    if (nh> 100) nf.style.height=nh+'px';;
+    nf.style.display='';
+    
+  } else {
+    var tdi=document.getElementById('tdiframe');
+     nf=document.createElement('iframe');
+     nf.id=idf;
+     nf.name=idf;
+     nf.className='ifonefam';
+     if (nh> 100) nf.style.height=nh+'px';
+     nf.src='[CORE_STANDURL]&app=FDL&action=FDL_CARD&id='+docid;
+     tdi.appendChild(nf); 
+  }
+}
+</script>
+
+<table id="maintable" style="width:100%;"><tr><td style="vertical-align:top;width:200px;">
+<ul style="padding-left:0px">
+[BLOCK CHAPTERS]
+<li style="list-style-type:none;margin-left:[level]px"><a class="tooltip" title="[chap_comment]" onclick="openiframe(event,this,'[id]')">[chap_level] [chap_title]</a></li>
+[ENDBLOCK CHAPTERS]
+</ul>
+</td>
+<td id="tdiframe"></td>
+</tr>
+</table>

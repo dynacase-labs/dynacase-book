@@ -1,0 +1,9 @@
+
+<script>document.needreload=true;</script>
+[ZONE FDL:VIEWFRAME?frameid=FR_BASIC]
+
+<ul>
+[BLOCK CHAPTERS]
+<li style="list-style-type:none;margin-left:[level]px"><a class="tooltip" title="[chap_comment]" href="[CORE_STANDURL]app=FDL&action=FDL_CARD&id=[id]">[chap_level] [chap_title]</a></li>
+[ENDBLOCK CHAPTERS]
+</ul>

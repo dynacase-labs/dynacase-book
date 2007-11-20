@@ -1,0 +1,38 @@
+# ============================================
+# $Id: Makefile.in,v 1.1 2007/11/20 17:10:44 eric Exp $
+# ============================================
+PACKAGE = @PACKAGE@
+VERSION = @VERSION@
+utildir=@PUBRULE@
+appname = BOOK
+pubdir = @prefix@
+srcdir = @srcdir@
+applib = FDL
+rootprefix=$(RPM_BUILD_ROOT)
+export pubdir utildir appname applib
+
+TAR = gtar
+GZIP_ENV = --best
+
+export targetdir PACKAGE
+
+SUBDIR=  Class Zone 
+[ZONEImages
+
+include $(utildir)/PubRule
+
+DISTFILES += $(SUBDIR)  $(wildcard *.ods)\
+            $(wildcard *.in) \
+            VERSION RELEASE 
+
+pages_ods = $(patsubst %.ods,$(pubdir)/$(style)/$(appname)/%.ods,$(wildcard *.ods))
+
+
+$(pubdir)/$(applib) :
+	mkdir -p $@
+
+$(pubdir)/$(style)/$(appname)/%.ods: %.ods
+	cp $< $@
+
+
+publish: $(pubdir)/$(applib) $(pages_ods) 
