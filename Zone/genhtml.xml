@@ -43,8 +43,16 @@ DIV.title {
 <body>
 
 <div class="title">[booktitle]</div>
-[BLOCK CHAPTERS]
+[IF has0]
+[BLOCK CHAPTER0]
+<div>[chap_content]</div>
+[ENDBLOCK CHAPTER0]
+<pagebreak/>[ENDIF has0]
+[IF toc]
+<div>[TEXT:Table of content]</div>
 <div id="html2ps-toc"></div>
+<pagebreak/>[ENDIF toc]
+[BLOCK CHAPTERS]
 <h[hlevel]>[chap_level] [chap_title]</h[hlevel]>
 <div style="margin-left:30px">[chap_content]</div>
 [ENDBLOCK CHAPTERS]

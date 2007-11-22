@@ -1,7 +1,7 @@
 #! /bin/rpm
 #
 #  File: libwhat.spec
-#  $Id: FREEDOM_BOOK.spec.in,v 1.1 2007/11/20 17:10:44 eric Exp $
+#  $Id: FREEDOM_BOOK.spec.in,v 1.2 2007/11/22 14:35:01 eric Exp $
 #
 #  This is the SPEC file for the What Users Module
 #  Anakeen What Application
@@ -83,10 +83,7 @@ Manage chapters in a book document
 autoconf
 ./configure  --with-pubrule=`pwd`
 make  pubdir=$RPM_BUILD_ROOT%{destdir}
-install -d $RPM_BUILD_ROOT/%{destdir}/FDL
-cd $RPM_BUILD_ROOT/%{destdir}/FDL
-ln -s ../%{dirname}/Method.*.php  .
-#ln -s ../%{dirname}/Class.*.php .
+
 
 %clean
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT

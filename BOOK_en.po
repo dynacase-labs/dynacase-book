@@ -2,40 +2,17 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-msgid	""
-msgstr	"Project-Id-Version: FREEDOM\n"
-	"POT-Creation-Date: 2003-10-06 17:35+0200\n"
-	"PO-Revision-Date: 2003-06-23 11:01+0200\n"
-	"Last-Translator: Eric Brison <eric.brison@anakeen.com>\n"
-	"Language-Team: English <distrib@anakeen.com>\n"
-	"MIME-Version: 1.0\n"
-	"Content-Type: text/plain; charset=ISO-8859-1\n"
-	"Content-Transfer-Encoding: 8bit\n"
+msgid ""
+msgstr ""
+"Project-Id-Version: FREEDOM\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-11-22 15:35+0100\n"
+"PO-Revision-Date: 2003-06-23 11:01+0200\n"
+"Last-Translator: Eric Brison <eric.brison@anakeen.com>\n"
+"Language-Team: English <distrib@anakeen.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
 
-msgid	"affected"
-msgstr	""
-
-msgid	"recorded"
-msgstr	""
-
-msgid	"resolved"
-msgstr	""
-
-msgid	"rejected"
-msgstr	""
-
-msgid	"synonyme"
-msgstr	""
-
-msgid	"draft"
-msgstr	""
-
-msgid	"TChanged"
-msgstr	""
-
-msgid	"Trecorded"
-msgstr	""
-
-#, c-format
-msgid	"fft %s"
-msgstr	""
+msgid "Table of content"
+msgstr ""

@@ -18,6 +18,7 @@ function viewbook($target="_self",$ulink=true,$abstract=false) {
     $chapters[$k]["chap_comment"]=str_replace(array('"',"\n","\r"),
 					      array("rsquo;",'<br>',''),$chap["chap_comment"]);
   }
+  
   $this->lay->setBlockData("CHAPTERS",$chapters);
 }
 
@@ -38,9 +39,15 @@ function genhtml($target="_self",$ulink=true,$abstract=false) {
   $this->viewbook($target,$ulink,$abstract);
   $chapters=$this->lay->getBlockData("CHAPTERS");
   
+  $chapter0=array();
   foreach ($chapters as $k=>$chap) {
     $chapters[$k]["hlevel"]=(count(explode(".",$chap["chap_level"])));
+    if ($chap["chap_level"][0]=="0") {
+      $chapter0[$k]=$chapters[$k];
+      unset($chapters[$k]);
+    }
   }
+  $this->lay->setBlockData("CHAPTER0",$chapter0);
   $this->lay->setBlockData("CHAPTERS",$chapters);
   $this->lay->set("booktitle",$this->title);
   $this->lay->set("HL",$this->hftocss($this->getValue("book_headleft")));
@@ -49,6 +56,8 @@ function genhtml($target="_self",$ulink=true,$abstract=false) {
   $this->lay->set("FL",$this->hftocss($this->getValue("book_footleft")));
   $this->lay->set("FM",$this->hftocss($this->getValue("book_footmiddle")));
   $this->lay->set("FR",$this->hftocss($this->getValue("book_footright")));
+  $this->lay->set("has0",(count($chapter0)>0));
+  $this->lay->set("toc",($this->getValue("book_toc")=="yes"));
 }
 
 function hftocss($hf) {

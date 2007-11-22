@@ -1,5 +1,5 @@
 # ============================================
-# $Id: Makefile.in,v 1.1 2007/11/20 17:10:44 eric Exp $
+# $Id: Makefile.in,v 1.2 2007/11/22 14:35:01 eric Exp $
 # ============================================
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
@@ -16,8 +16,7 @@ GZIP_ENV = --best
 
 export targetdir PACKAGE
 
-SUBDIR=  Class Zone 
-[ZONEImages
+SUBDIR=  Class Zone Images
 
 include $(utildir)/PubRule
 
@@ -33,6 +32,7 @@ $(pubdir)/$(applib) :
 
 $(pubdir)/$(style)/$(appname)/%.ods: %.ods
 	cp $< $@
+
 
 
 publish: $(pubdir)/$(applib) $(pages_ods) 

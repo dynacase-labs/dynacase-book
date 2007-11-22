@@ -2,43 +2,47 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-msgid	""
-msgstr	"Project-Id-Version: FREEDOM\n"
-	"POT-Creation-Date: 2003-10-06 17:35+0200\n"
-	"PO-Revision-Date: 2003-06-23 11:01+0200\n"
-	"Last-Translator: Eric Brison <eric.brison@anakeen.com>\n"
-	"Language-Team: French <distrib@anakeen.com>\n"
-	"MIME-Version: 1.0\n"
-	"Content-Type: text/plain; charset=ISO-8859-1\n"
-	"Content-Transfer-Encoding: 8bit\n"
+msgid ""
+msgstr ""
+"Project-Id-Version: FREEDOM-BOOK\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-11-22 15:35+0100\n"
+"PO-Revision-Date: 2007-11-22 15:36+0100\n"
+"Last-Translator: Eric Brison <eric.brison@anakeen.com>\n"
+"Language-Team: French <distrib@anakeen.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
 
-msgid	"affected"
-msgstr	"affecté"
+msgid "Table of content"
+msgstr "Table des matières"
 
-msgid	"recorded"
-msgstr	"enregistré"
+#~ msgid "affected"
+#~ msgstr "affecté"
 
-msgid	"resolved"
-msgstr "résolu"
+#~ msgid "recorded"
+#~ msgstr "enregistré"
 
-msgid	"rejected"
-msgstr	"rejeté"
+#~ msgid "resolved"
+#~ msgstr "résolu"
 
-msgid	"synonyme"
-msgstr	"synonyme"
+#~ msgid "rejected"
+#~ msgstr "rejeté"
 
-msgid	"draft"
-msgstr	"brouillon"
+#~ msgid "synonyme"
+#~ msgstr "synonyme"
 
-msgid	"TChanged"
-msgstr	"autres transitions"
+#~ msgid "draft"
+#~ msgstr "brouillon"
 
-msgid	"Trecorded"
-msgstr	"vers enregistré"
+#~ msgid "TChanged"
+#~ msgstr "autres transitions"
 
-#, c-format
-msgid	"fft %s"
-msgstr	"fft %s"
+#~ msgid "Trecorded"
+#~ msgstr "vers enregistré"
 
-#~ msgid	"Proposition:"
-#~ msgstr	"Proposition:"
+#~ msgid "fft %s"
+#~ msgstr "fft %s"
+
+#~ msgid "Proposition:"
+#~ msgstr "Proposition:"
