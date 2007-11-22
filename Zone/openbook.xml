@@ -81,7 +81,15 @@ function openiframe(event,th,docid) {
 <li style="list-style-type:none;margin-left:[level]px"><a class="tooltip" title="[chap_comment]" onclick="openiframe(event,this,'[id]')">[chap_level] [chap_title]</a></li>
 [ENDBLOCK CHAPTERS]
 </ul>
+<hr width="50%">
+<ul style="padding-left:0px">
+[BLOCK ANNX]
+<li><a  onclick="openiframe(event,this,'[id]')"> [title]</a></li>
+[ENDBLOCK ANNX]
+</ul>
+
 </td>
 <td id="tdiframe"></td>
 </tr>
 </table>
+

@@ -1,0 +1,53 @@
+<html>
+<head>
+   <title>[booktitle]</title>
+   <style type="text/css">
+H1 {
+  font-size:12pt;
+}
+H2 {
+  font-size:11pt;
+}
+H3,H4,H5,H6 {
+  font-size:10pt;
+}
+DIV.title {
+  text-align:center;
+  font-size:14pt;  
+}
+@page {
+  size: 210mm 297mm;
+  margin: 2cm;
+
+  @top-left {
+    content: [HL];
+  }
+  @top-center {
+    content: [HM];
+  }
+  @top-right {
+    content: [HR];
+  }
+  @bottom-left {
+    content: [FL];
+  }
+  @bottom-center {
+    content: [FM];
+  }
+  @bottom-right {
+    content: [FR];
+  }
+}
+   </style>
+</head>
+<body>
+
+<div class="title">[booktitle]</div>
+[BLOCK CHAPTERS]
+<div id="html2ps-toc"></div>
+<h[hlevel]>[chap_level] [chap_title]</h[hlevel]>
+<div style="margin-left:30px">[chap_content]</div>
+[ENDBLOCK CHAPTERS]
+
+
+</body></html>
