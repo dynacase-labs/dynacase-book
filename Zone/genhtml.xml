@@ -1,6 +1,7 @@
 <html>
 <head>
    <title>[booktitle]</title>
+   <base href="[CORE_ABSURL]">
    <style type="text/css">
 H1 {
   font-size:12pt;
@@ -14,6 +15,9 @@ H3,H4,H5,H6 {
 DIV.title {
   text-align:center;
   font-size:14pt;  
+}
+P, TD, LI {  
+  font-size:10pt;  
 }
 @page {
   size: 210mm 297mm;

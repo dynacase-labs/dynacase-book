@@ -74,8 +74,8 @@ function openiframe(event,th,docid) {
   }
 }
 </script>
-
-<table id="maintable" style="width:100%;"><tr><td style="vertical-align:top;width:200px;">
+<hr>
+<table id="maintable" style="width:100%;"><tr><td style="vertical-align:top;width:200px;border-right:solid black 1px">
 <ul style="padding-left:0px">
 [BLOCK CHAPTERS]
 <li style="list-style-type:none;margin-left:[level]px"><a class="tooltip" title="[chap_comment]" onclick="openiframe(event,this,'[id]')">[chap_level] [chap_title]</a></li>
