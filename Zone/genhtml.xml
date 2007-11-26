@@ -1,8 +1,11 @@
 <html>
 <head>
    <title>[booktitle]</title>
-   <base href="[CORE_ABSURL]">
+   [IF ispdf]<base href="[basehref]">[ENDIF ispdf]
    <style type="text/css">
+BODY {  
+  font-family:helvetica, sans;
+}
 H1 {
   font-size:12pt;
 }
@@ -19,6 +22,7 @@ DIV.title {
 P, TD, LI {  
   font-size:10pt;  
 }
+[IF ispdf]
 @page {
   size: 210mm 297mm;
   margin: 2cm;
@@ -42,11 +46,11 @@ P, TD, LI {
     content: [FR];
   }
 }
+[ENDIF ispdf]
    </style>
 </head>
 <body>
 
-<div class="title">[booktitle]</div>
 [IF has0]
 [BLOCK CHAPTER0]
 <div>[chap_content]</div>
