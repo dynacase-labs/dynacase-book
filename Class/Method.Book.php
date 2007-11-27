@@ -87,17 +87,51 @@ function hftocss($hf) {
   return '"'.$hf.'"';
 }
 
+
+function postCopy(&$copyfrom) {
+  include_once("FDL/Lib.Dir.php");
+  $filter[]="chap_bookid=".$copyfrom->initid;
+  $filter[]="doctype!='T'";
+
+  $chapters = getChildDoc($this->dbaccess, 0,0,"ALL",$filter,$this->userid,"TABLE","CHAPTER");
+
+  $this->deleteValue("book_pdf");
+  $this->deleteValue("book_datepdf");
+  foreach ($chapters as $k=>$chap) {
+
+    $nc=getDocObject($this->dbaccess,$chap);
+    $copy=$nc->Copy();
+    if (! is_object($copy)) $err.= $copy;
+    else {
+      $copy->setValue("chap_bookid",$this->initid);
+      $copy->modify();
+      $this->Addfile($copy->initid);
+    }    
+  }
+}
+function postDelete() {
+  include_once("FDL/Lib.Dir.php");
+  $filter[]="chap_bookid=".$this->initid;
+  $filter[]="doctype!='T'";
+
+  $chapters = getChildDoc($this->dbaccess, 0,0,"ALL",$filter,$this->userid,"TABLE","CHAPTER");
+  $err="";
+  foreach ($chapters as $k=>$chap) {
+    $nc=getDocObject($this->dbaccess,$chap);
+    $err.=$nc->delete();
+  }
+  return $err;
+}
+
   /**
-   * send a request to TE to convert fiele
-   * update $attrid_txt table column
-   * @param string $va value of file attribute like mime|vid
-   * @param string $engine the name of transformation
-   * @return new file reference
+   * send a request to TE to convert file to PDF
+   * 
+   * 
    */
 public function genpdf($target="_self",$ulink=true,$abstract=false) {     
   include_once("FDL/Lib.Vault.php");   $tea=getParam("TE_ACTIVATE");
   if ($tea!="yes") { 
-    addWarningMessage(_("TE engine not activated"));
+    addWarningMsg(_("TE engine not activated"));
     return;
   }
   if (@include_once("TE/Class.TEClient.php")) {
@@ -168,7 +202,7 @@ public function genpdf($target="_self",$ulink=true,$abstract=false) {
     }
 
   } else {
-    addWarningMessage(_("TE engine activate but TE-CLIENT not found"));
+    addWarningMsg(_("TE engine activate but TE-CLIENT not found"));
   }
 }
 
