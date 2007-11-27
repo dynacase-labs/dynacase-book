@@ -15,6 +15,20 @@ DIV.tablesimple {
 
 <script>
 var selchap=null;
+var selifr=null;
+function resizeiframe(event) {
+  if (document.getElementById("maintable")) {
+    var fh=getFrameHeight();
+    var xy=getAnchorPosition("maintable");
+    var nh=fh-xy.y-15;
+
+    if (nh> 100)   document.getElementById("maintable").style.height=nh+'px';
+    if (selifr) {
+      if (nh> 100) selifr.style.height=nh+'px';;
+    }
+  }
+}
+
 function openiframe(event,th,docid) {
   var wfgtop;
   if (selchap != null) {
@@ -31,11 +45,6 @@ function openiframe(event,th,docid) {
   }
  
 
-  var fh=getFrameHeight();
-  var xy=getAnchorPosition("maintable");
-  var nh=fh-xy.y-15;
-
-  if (nh> 100)   document.getElementById("maintable").style.height=nh+'px';
 
   var idf='chap_'+docid;
   var nf;
@@ -47,6 +56,7 @@ function openiframe(event,th,docid) {
     lif[i].style.display='none';
   }
   if (nf) {
+    selifr=nf;
     if (reloadlist) {
       var isrc;
       if (window.frames[idf]) {
@@ -59,20 +69,21 @@ function openiframe(event,th,docid) {
 	//	}
       }
     }
-    if (nh> 100) nf.style.height=nh+'px';;
     nf.style.display='';
-    
+    resizeiframe();    
   } else {
     var tdi=document.getElementById('tdiframe');
      nf=document.createElement('iframe');
      nf.id=idf;
      nf.name=idf;
      nf.className='ifonefam';
-     if (nh> 100) nf.style.height=nh+'px';
      nf.src='[CORE_STANDURL]&app=FDL&action=FDL_CARD&id='+docid;
      tdi.appendChild(nf); 
+     selifr=nf;
+     resizeiframe();
   }
 }
+addEvent(window,"resize",resizeiframe);
 </script>
 <hr>
 <table id="maintable" style="width:100%;"><tr><td style="vertical-align:top;width:200px;border-right:solid black 1px">
