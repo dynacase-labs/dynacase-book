@@ -98,7 +98,6 @@ function postCopy(&$copyfrom) {
   $this->deleteValue("book_pdf");
   $this->deleteValue("book_datepdf");
   foreach ($chapters as $k=>$chap) {
-
     $nc=getDocObject($this->dbaccess,$chap);
     $copy=$nc->Copy();
     if (! is_object($copy)) $err.= $copy;
@@ -108,6 +107,16 @@ function postCopy(&$copyfrom) {
       $this->Addfile($copy->initid);
     }    
   }
+
+
+  $chapid=getFamIdFromName($this->dbaccess,"CHAPTER");
+  $filter=array();
+  $filter[]="fromid != $chapid";
+  $tannx=$copyfrom->getContent(true,$filter);
+  foreach ($tannx as $k=>$v) {
+      $this->Addfile($v["initid"]);    
+  }
+
 }
 function postDelete() {
   include_once("FDL/Lib.Dir.php");

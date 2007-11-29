@@ -100,7 +100,7 @@ addEvent(window,"resize",resizeiframe);
 </ul>
 
 </td>
-<td id="tdiframe"></td>
+<td style="vertical-align:top;" id="tdiframe"></td>
 </tr>
 </table>
 
