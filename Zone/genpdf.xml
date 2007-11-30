@@ -5,9 +5,9 @@ verifycomputedfiles('[docid]');
 
 <div style="text-align:center">
 <H2>[title]</h2>
-<h2>[TEXT:PDF file being processed]<h2>
+<h2>[TEXT:PDF file being processed]</h2>
 
-<img src="[IMG:workinprogress.png]">
+<img src="[IMG:workinprogress.png]"><br>
  <span id="counter">.</span>
 </div>
 [ZONE FDL:HTMLFOOT]

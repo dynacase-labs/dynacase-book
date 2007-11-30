@@ -11,15 +11,34 @@ function viewbook($target="_self",$ulink=true,$abstract=false) {
   $filter[]="chap_bookid=".$this->initid;
   $filter[]="doctype!='T'";
 
-  $chapters = getChildDoc($this->dbaccess, 0,0,"ALL",$filter,$this->userid,"TABLE","CHAPTER",false,"chap_level");
+  $chapters = getChildDoc($this->dbaccess, 0,0,"ALL",$filter,$this->userid,"TABLE","CHAPTER",false,"");
+  
 
   foreach ($chapters as $k=>$chap) {
     $chapters[$k]["level"]=(count(explode(".",$chap["chap_level"]))-1)*15;
     $chapters[$k]["chap_comment"]=str_replace(array('"',"\n","\r"),
 					      array("rsquo;",'<br>',''),$chap["chap_comment"]);
   }
+  uasort($chapters, array (get_class($this), "_cmplevel"));
   
+
+ 
   $this->lay->setBlockData("CHAPTERS",$chapters);
+}
+
+/**
+ * to sort group by name
+ */
+static function _cmplevel($a,$b) {
+  
+  $tv1=array_pad((explode(".",$a['chap_level'])),5,0);
+  $tv2=array_pad((explode(".",$b['chap_level'])),5,0);
+  $iv1='';
+  $iv2='';
+  foreach ($tv1 as $k=>$v) $iv1.=sprintf("%02d",$v);
+  foreach ($tv2 as $k=>$v) $iv2.=sprintf("%02d",$v);
+
+  return strcmp($iv1,$iv2);
 }
 
 

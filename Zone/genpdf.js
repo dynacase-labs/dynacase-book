@@ -1,5 +1,7 @@
 var XHT_FILES;
 
+
+var BEGDATEPDF=new Date();
 function verifycomputedfiles(docid) {
   var corestandurl=window.location.pathname+'?sole=Y';
   // branch for native XMLHttpRequest object
@@ -9,7 +11,8 @@ function verifycomputedfiles(docid) {
     // branch for IE/Windows ActiveX version     
     XHT_FILES = new ActiveXObject("Microsoft.XMLHTTP");
   }
-  if (XHT_FILES) {     
+  if (XHT_FILES) {  
+    var nd=new Date();
     XHT_FILES.onreadystatechange = XMLprocessverificationfiles;
     XHT_FILES.open("GET", corestandurl+'&app=FDL&action=VERIFYCOMPUTEDFILES&id='+docid,true);   
     XHT_FILES.send('');
@@ -44,7 +47,11 @@ function XMLprocessverificationfiles() {
 	  }
 	  if (needverify) {
 	    var so=document.getElementById('counter');
-	    if (so) so.innerHTML=so.innerHTML+'.',
+	    var nd=new Date();
+	    var ndt=nd.getTime();
+
+	    nd.setTime(ndt - BEGDATEPDF.getTime());
+	    if (so) so.innerHTML=nd.getUTCHours()+'h ' +nd.getUTCMinutes()+'min ' +nd.getUTCSeconds()+'s';
 	    setTimeout(function() { verifycomputedfiles(docid) }, 2000);
 	  } else {
 	    alert('Fichier PDF produit');
