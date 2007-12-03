@@ -8,12 +8,15 @@ BODY {
 }
 H1 {
   font-size:12pt;
+  margin-left:0cm;
 }
 H2 {
   font-size:11pt;
+  margin-left:0cm;
 }
 H3,H4,H5,H6 {
   font-size:10pt;
+  margin-left:1cm;
 }
 DIV.title {
   text-align:center;
@@ -23,6 +26,9 @@ P, TD, LI {
   font-size:10pt;  
 }
 [IF ispdf]
+TD P { font-family: "helvetica", "sans"; 
+  font-size: 10pt; page-break-inside: avoid; page-break-before: auto; page-break-after: avoid }
+TABLE {page-break-inside: avoid}
 @page {
   size: 210mm 297mm;
   margin: 2cm;
@@ -51,19 +57,32 @@ P, TD, LI {
 </head>
 <body>
 
+[IF ispdf]
+<DIV TYPE=HEADER>
+	<table BORDER=0 CELLPADDING=2 CELLSPACING=0 WIDTH="100%"><tr><td>[HL]</td><td style="text-align:center">[HM]</td><td style="text-align:right">[HR]</td></tr></table>
+</DIV>
+[ENDIF ispdf]
 [IF has0]
 [BLOCK CHAPTER0]
-<div>[chap_content]</div>
+<div >[chap_content]</div>
 [ENDBLOCK CHAPTER0]
-<pagebreak/>[ENDIF has0]
+
+<p style="page-break-before: always">&nbsp;</p>
+
+[ENDIF has0]
 [IF toc]
-<div>[TEXT:Table of content]</div>
 <div id="html2ps-toc"></div>
-<pagebreak/>[ENDIF toc]
+<p style="page-break-before: always">&nbsp;</p>
+[ENDIF toc]
 [BLOCK CHAPTERS]
 <h[hlevel]>[chap_level] [chap_title]</h[hlevel]>
-<div style="margin-left:30px">[chap_content]</div>
+<div>[chap_content]</div>
 [ENDBLOCK CHAPTERS]
 
+[IF ispdf]
+<DIV TYPE=FOOTER>
+	<table BORDER=0 CELLPADDING=2 CELLSPACING=0 WIDTH="100%"><tr><td>[FL]</td><td style="text-align:center">[FM]</td><td style="text-align:right">[FR]</td></tr></table>
+</DIV>
+[ENDIF ispdf]
 
 </body></html>

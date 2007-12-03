@@ -71,12 +71,12 @@ function genhtml($target="_self",$ulink=true,$abstract=false) {
   $this->lay->set("booktitle",$this->title);
   $this->lay->set("has0",(count($chapter0)>0));
   if ($this->ispdf) {
-    $this->lay->set("HL",$this->hftocss($this->getValue("book_headleft")));
-    $this->lay->set("HM",$this->hftocss($this->getValue("book_headmiddle")));
-    $this->lay->set("HR",$this->hftocss($this->getValue("book_headright")));
-    $this->lay->set("FL",$this->hftocss($this->getValue("book_footleft")));
-    $this->lay->set("FM",$this->hftocss($this->getValue("book_footmiddle")));
-    $this->lay->set("FR",$this->hftocss($this->getValue("book_footright")));
+    $this->lay->set("HL",$this->hftoooo($this->getValue("book_headleft")));
+    $this->lay->set("HM",$this->hftoooo($this->getValue("book_headmiddle")));
+    $this->lay->set("HR",$this->hftoooo($this->getValue("book_headright")));
+    $this->lay->set("FL",$this->hftoooo($this->getValue("book_footleft")));
+    $this->lay->set("FM",$this->hftoooo($this->getValue("book_footmiddle")));
+    $this->lay->set("FR",$this->hftoooo($this->getValue("book_footright")));
     $this->lay->set("toc",($this->getValue("book_toc")=="yes"));
   
     $base=getParam("CORE_EXTERNURL");
@@ -104,6 +104,12 @@ function hftocss($hf) {
   $hf=str_replace("##PAGES##",'" counter(pages) "',$hf);
   $hf=str_replace("##PAGE##",'" counter(page) "',$hf);
   return '"'.$hf.'"';
+}
+function hftoooo($hf) {
+
+  $hf=str_replace("##PAGES##","<SDFIELD TYPE=DOCSTAT SUBTYPE=PAGE FORMAT=PAGE>1</SDFIELD>",$hf);
+  $hf=str_replace("##PAGE##","<SDFIELD TYPE=PAGE SUBTYPE=RANDOM FORMAT=PAGE>1</SDFIELD>",$hf);
+  return $hf;
 }
 
 
@@ -200,11 +206,18 @@ public function genpdf($target="_self",$ulink=true,$abstract=false) {
     $urlindex=getParam("CORE_EXTERNURL");
     $callback=$urlindex."?sole=Y&app=FDL&action=INSERTFILE&engine=$engine&vidout=$vid&name=".urlencode($this->title).".pdf";
     $ot=new TransformationEngine(getParam("TE_HOST"),getParam("TE_PORT"));
+    $html = preg_replace(array("/SRC=\"([^\"]+)\"/e","/src=\"([^\"]+)\"/e"),
+			 "\$this->srcfile('\\1')",
+			 $html);
+    $html = preg_replace(array('/size="([1-9])"/e','/size=([1-9])/e'),
+			 "",
+			 $html);
+    $html = str_replace('<table ','<table style=" page-break-inside: avoid;" ', $html);
 
-    $filename= uniqid("/var/tmp/txt-".'.html');
+    $filename= uniqid("/var/tmp/txt-").'.html';
     file_put_contents($filename,$html);
     $err=$ot->sendTransformation($engine,$vid,$filename,$callback,$info);
-    @unlink($filename);
+    //@unlink($filename);
     if ($err=="") {
       global $action;
       $tr=new TaskRequest($this->dbaccess);
@@ -233,7 +246,18 @@ public function genpdf($target="_self",$ulink=true,$abstract=false) {
     addWarningMsg(_("TE engine activate but TE-CLIENT not found"));
   }
 }
+function srcfile($src) {
+  global $ifiles;
+  $vext= array("gif","png","jpg","jpeg","bmp");
+  
+  if (ereg("vid=([0-9]+)",$src,$reg)) {
+    $info=vault_properties($reg[1]);
+    if ( ! in_array(fileextension($info->path),$vext)) return "";
+    return 'src="'.$info->path.'"';
+  }
 
+  return "";
+}
 function getFileDate($va) {  
   if (ereg ("(.*)\|(.*)", $va, $reg)) {  
     include_once("VAULT/Class.VaultDiskStorage.php");
