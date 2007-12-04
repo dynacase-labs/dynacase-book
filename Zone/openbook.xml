@@ -7,9 +7,13 @@
   border:none;
 }
 DIV.tablesimple {
-  height:100%;
-  
+  height:100%;  
 }
+
+DIV.chapters LI {
+  white-space:nowrap;
+}
+
    </style>
 <script>document.needreload=true;</script>
 
@@ -26,6 +30,8 @@ function resizeiframe(event) {
     if (selifr) {
       if (nh> 100) selifr.style.height=nh+'px';;
     }
+    var divchap=document.getElementById("chapters");
+    divchap.style.height=nh+'px';
   }
 }
 
@@ -44,8 +50,6 @@ function openiframe(event,th,docid) {
     selchap.style.color='orange';
   }
  
-
-
   var idf='chap_'+docid;
   var nf;
   var reloadlist=false;
@@ -87,6 +91,7 @@ addEvent(window,"resize",resizeiframe);
 </script>
 <hr>
 <table id="maintable" style="width:100%;"><tr><td style="vertical-align:top;width:200px;border-right:solid black 1px">
+<div class="chapters" id="chapters" style="overflow:auto">
 <ul style="padding-left:0px">
 [BLOCK CHAPTERS]
 <li style="list-style-type:none;margin-left:[level]px"><a class="tooltip" title="[chap_comment]" onclick="openiframe(event,this,'[id]')">[chap_level] [chap_title]</a></li>
@@ -98,7 +103,7 @@ addEvent(window,"resize",resizeiframe);
 <li><a  onclick="openiframe(event,this,'[id]')"> [title]</a></li>
 [ENDBLOCK ANNX]
 </ul>
-
+</
 </td>
 <td style="vertical-align:top;" id="tdiframe"></td>
 </tr>

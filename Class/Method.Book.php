@@ -12,7 +12,7 @@ function viewbook($target="_self",$ulink=true,$abstract=false) {
   $filter[]="doctype!='T'";
 
   $chapters = getChildDoc($this->dbaccess, 0,0,"ALL",$filter,$this->userid,"TABLE","CHAPTER",false,"");
-  
+  $this->lay->set("stylesheet",($this->getValue("book_tplodt")!=""));
 
   foreach ($chapters as $k=>$chap) {
     $chapters[$k]["level"]=(count(explode(".",$chap["chap_level"]))-1)*15;
@@ -70,6 +70,7 @@ function genhtml($target="_self",$ulink=true,$abstract=false) {
   $this->lay->setBlockData("CHAPTERS",$chapters);
   $this->lay->set("booktitle",$this->title);
   $this->lay->set("has0",(count($chapter0)>0));
+  $this->lay->set("stylesheet",($this->ispdf && ($this->getValue("book_tplodt")!="")));
   if ($this->ispdf) {
     $this->lay->set("HL",$this->hftoooo($this->getValue("book_headleft")));
     $this->lay->set("HM",$this->hftoooo($this->getValue("book_headmiddle")));
@@ -178,7 +179,7 @@ public function genpdf($target="_self",$ulink=true,$abstract=false) {
     $this->ispdf=true;
     $html=$this->viewDoc("BOOK:GENHTML:S");
     $this->ispdf=false;
-
+    
     $this->lay->set("docid",$this->id);
     $this->lay->set("title",$this->title);
     $va=$this->getValue("book_pdf");
@@ -202,9 +203,9 @@ public function genpdf($target="_self",$ulink=true,$abstract=false) {
 	$this->modify();
       }
     }
-    $engine='pdf';
+    $engine='odt';
     $urlindex=getParam("CORE_EXTERNURL");
-    $callback=$urlindex."?sole=Y&app=FDL&action=INSERTFILE&engine=$engine&vidout=$vid&name=".urlencode($this->title).".pdf";
+    $callback=$urlindex."?sole=Y&app=FDL&action=FDL_METHOD&redirect=no&method=ooo2pdf&id=".$this->id;
     $ot=new TransformationEngine(getParam("TE_HOST"),getParam("TE_PORT"));
     $html = preg_replace(array("/SRC=\"([^\"]+)\"/e","/src=\"([^\"]+)\"/e"),
 			 "\$this->srcfile('\\1')",
@@ -228,7 +229,6 @@ public function genpdf($target="_self",$ulink=true,$abstract=false) {
       $tr->uid=$this->userid;
       $tr->uname=$action->user->firstname." ".$action->user->lastname;
       $err=$tr->Add();
-
     } else {
       $vf=initVaultAccess();
       $filename= uniqid("/var/tmp/txt-".$vid.'-');
@@ -246,6 +246,99 @@ public function genpdf($target="_self",$ulink=true,$abstract=false) {
     addWarningMsg(_("TE engine activate but TE-CLIENT not found"));
   }
 }
+
+
+  /**
+   * send a request to TE to convert file to PDF
+   * Pass two
+   * 
+   */
+public function ooo2pdf() {     
+  include_once("FDL/insertfile.php");   
+  $tea=getParam("TE_ACTIVATE");
+  if ($tea!="yes") { 
+    addWarningMsg(_("TE engine not activated"));
+    return;
+  }
+  if (@include_once("TE/Class.TEClient.php")) {
+    include_once("FDL/Class.TaskRequest.php");
+
+    $tid= GetHttpVars("tid");
+
+    $filename= uniqid("/var/tmp/txt-").'.odt';
+    $err=getTEFile($tid,$filename,$info);
+    if ($err=="") {
+      // add style sheet
+      $ott=$this->getValue("book_tplodt");
+      if ($ott) {
+	$this->insertstyle($filename,$this->vault_filename("book_tplodt",true));
+      }
+
+
+
+      $va=$this->getValue("book_pdf");
+      if (ereg ("(.*)\|(.*)", $va, $reg)) $vid=$reg[2];
+      
+      $engine='pdf';
+      $urlindex=getParam("CORE_EXTERNURL");
+      $callback=$urlindex."?sole=Y&app=FDL&action=INSERTFILE&engine=$engine&vidout=$vid&name=".urlencode($this->title).".pdf";
+      $ot=new TransformationEngine(getParam("TE_HOST"),getParam("TE_PORT"));
+    
+
+      $err=$ot->sendTransformation($engine,$vid,$filename,$callback,$info);
+      @unlink($filename);
+      if ($err=="") {
+	global $action;
+	$tr=new TaskRequest($this->dbaccess);
+	$tr->tid=$info["tid"];
+	$tr->fkey=$vid;
+	$tr->status=$info["status"];
+	$tr->comment=$info["comment"];
+	$tr->uid=$this->userid;
+	$tr->uname=$action->user->firstname." ".$action->user->lastname;
+	$err=$tr->Add();
+      } else {
+	$vf=initVaultAccess();
+	$filename= uniqid("/var/tmp/txt-".$vid.'-');
+	file_put_contents($filename,$err);
+	//$vf->rename($vidout,"toto.txt");
+	$vf->Retrieve($vid, $info);
+	$err=$vf->Save($filename, false , $vid);
+	@unlink($filename);
+	$vf->rename($vid,_("impossible conversion").".txt");
+	$vf->storage->teng_state=-2;
+	$vf->storage->modify();;
+      }
+    }
+
+  } else {
+    addWarningMsg(_("TE engine activate but TE-CLIENT not found"));
+  }
+}
+
+
+function insertstyle($odt,$ott) {
+  if (! file_exists($odt)) return "file $odt not found";
+  $dodt=uniqid("/var/tmp/odt");  
+  $cmd = sprintf("unzip  %s  -d %s >/dev/null",$odt , $dodt );
+  system($cmd);
+
+  $dott=uniqid("/var/tmp/ott");  
+  $cmd = sprintf("unzip  %s  -d %s >/dev/null",$ott , $dott );
+  system($cmd);
+
+  $cmd = sprintf("cp %s/styles.xml  %s >/dev/null",$dott , $dodt );
+  system($cmd);
+
+  $cmd = sprintf("sed -i -e 's/style:master-page-name=\"HTML\"//g' %s/content.xml",$dodt);
+  system($cmd);
+  $cmd = sprintf("sed -i -e 's!href=\"../../../!href=\"/var/!g' %s/content.xml",$dodt);
+  system($cmd);
+  $cmd = sprintf("cd %s;zip -r %s * >/dev/null",$dodt , $odt );
+  system($cmd);
+  
+  
+}
 function srcfile($src) {
   global $ifiles;
   $vext= array("gif","png","jpg","jpeg","bmp");
@@ -253,7 +346,7 @@ function srcfile($src) {
   if (ereg("vid=([0-9]+)",$src,$reg)) {
     $info=vault_properties($reg[1]);
     if ( ! in_array(fileextension($info->path),$vext)) return "";
-    return 'src="'.$info->path.'"';
+    return 'src="file://'.$info->path.'"';
   }
 
   return "";

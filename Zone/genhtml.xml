@@ -1,7 +1,7 @@
 <html>
 <head>
    <title>[booktitle]</title>
-   [IF ispdf]<base href="[basehref]">[ENDIF ispdf]
+[IFNOT stylesheet]
    <style type="text/css">
 BODY {  
   font-family:helvetica, sans;
@@ -53,15 +53,15 @@ TABLE {page-break-inside: avoid}
   }
 }
 [ENDIF ispdf]
-   </style>
+   </style>[ENDIF stylesheet]
 </head>
 <body>
 
-[IF ispdf]
+[IF ispdf][IFNOT stylesheet]
 <DIV TYPE=HEADER>
 	<table BORDER=0 CELLPADDING=2 CELLSPACING=0 WIDTH="100%"><tr><td>[HL]</td><td style="text-align:center">[HM]</td><td style="text-align:right">[HR]</td></tr></table>
 </DIV>
-[ENDIF ispdf]
+[ENDIF stylesheet][ENDIF ispdf]
 [IF has0]
 [BLOCK CHAPTER0]
 <div >[chap_content]</div>
@@ -79,10 +79,10 @@ TABLE {page-break-inside: avoid}
 <div>[chap_content]</div>
 [ENDBLOCK CHAPTERS]
 
-[IF ispdf]
+[IF ispdf][IFNOT stylesheet]
 <DIV TYPE=FOOTER>
 	<table BORDER=0 CELLPADDING=2 CELLSPACING=0 WIDTH="100%"><tr><td>[FL]</td><td style="text-align:center">[FM]</td><td style="text-align:right">[FR]</td></tr></table>
 </DIV>
-[ENDIF ispdf]
+[ENDIF stylesheet][ENDIF ispdf]
 
 </body></html>

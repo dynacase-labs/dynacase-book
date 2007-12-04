@@ -6,16 +6,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FREEDOM-BOOK\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-22 15:35+0100\n"
-"PO-Revision-Date: 2007-11-22 15:36+0100\n"
+"POT-Creation-Date: 2007-12-04 10:54+0100\n"
+"PO-Revision-Date: 2007-12-04 10:55+0100\n"
 "Last-Translator: Eric Brison <eric.brison@anakeen.com>\n"
 "Language-Team: French <distrib@anakeen.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Table of content"
-msgstr "Table des matières"
+msgid "PDF file being processed"
+msgstr "Production du PDF en cours"
+
+msgid "TE engine not activated"
+msgstr ""
+
+msgid "impossible conversion"
+msgstr ""
+
+msgid "TE engine activate but TE-CLIENT not found"
+msgstr ""
+
+#~ msgid "Table of content"
+#~ msgstr "Table des matières"
 
 #~ msgid "affected"
 #~ msgstr "affecté"
