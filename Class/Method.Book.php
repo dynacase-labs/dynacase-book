@@ -218,7 +218,7 @@ public function genpdf($target="_self",$ulink=true,$abstract=false) {
     $filename= uniqid("/var/tmp/txt-").'.html';
     file_put_contents($filename,$html);
     $err=$ot->sendTransformation($engine,$vid,$filename,$callback,$info);
-    //@unlink($filename);
+    @unlink($filename);
     if ($err=="") {
       global $action;
       $tr=new TaskRequest($this->dbaccess);
@@ -337,6 +337,11 @@ function insertstyle($odt,$ott) {
   $cmd = sprintf("cd %s;zip -r %s * >/dev/null",$dodt , $odt );
   system($cmd);
   
+  $cmd = sprintf("/bin/rm -fr %s", $dodt );
+  system($cmd);
+
+  $cmd = sprintf("/bin/rm -fr %s", $dott );
+  system($cmd);
   
 }
 function srcfile($src) {
