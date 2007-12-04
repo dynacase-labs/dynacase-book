@@ -164,7 +164,8 @@ function postDelete() {
    * 
    */
 public function genpdf($target="_self",$ulink=true,$abstract=false) {     
-  include_once("FDL/Lib.Vault.php");   $tea=getParam("TE_ACTIVATE");
+  include_once("FDL/Lib.Vault.php");   
+  $tea=getParam("TE_ACTIVATE");
   if ($tea!="yes") { 
     addWarningMsg(_("TE engine not activated"));
     return;
@@ -254,7 +255,8 @@ public function genpdf($target="_self",$ulink=true,$abstract=false) {
    * 
    */
 public function ooo2pdf() {     
-  include_once("FDL/insertfile.php");   
+  include_once("FDL/insertfile.php");       
+  include_once("FDL/Lib.Vault.php");   
   $tea=getParam("TE_ACTIVATE");
   if ($tea!="yes") { 
     addWarningMsg(_("TE engine not activated"));
