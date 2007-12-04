@@ -7,7 +7,7 @@
 #   as published by the Free Software Foundation; either version
 #   2 of the License, or (at your option) any later version.
 #
-AC_REVISION($Id: configure.in,v 1.1 2007/11/20 17:10:44 eric Exp $)
+AC_REVISION($Id: configure.in,v 1.2 2007/12/04 16:40:03 eric Exp $)
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
@@ -18,7 +18,7 @@ VERSION=`cat VERSION`
 AC_SUBST(RELEASE)
 RELEASE=`cat RELEASE`
 AC_SUBST(PACKAGE)
-PACKAGE=FREEDOM_BOOK
+PACKAGE=FREEDOM-BOOK
 AC_SUBST(PACKAGELIB)
 PACKAGELIB=FDL
 
@@ -56,4 +56,4 @@ AC_ARG_WITH(dbport,
 
 
 AC_OUTPUT(Makefile \
-        FREEDOM_BOOK.spec)
+        FREEDOM-BOOK.spec)
