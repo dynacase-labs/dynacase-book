@@ -54,6 +54,13 @@ TABLE {page-break-inside: avoid}
 }
 [ENDIF ispdf]
    </style>[ENDIF stylesheet]
+[IF stylesheet]
+   <style type="text/css">
+@page {
+  size: 210mm 297mm;
+  margin: 2cm;
+}
+</style>[ENDIF stylesheet]
 </head>
 <body>
 
