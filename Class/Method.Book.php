@@ -2,6 +2,12 @@
 
 public $defaultview="BOOK:VIEWBOOK";
 
+function specRefresh() {
+  
+
+  $this->AddParamRefresh("book_tplodt","book_headleft,book_headmiddle,book_headright,book_footleft,book_footmiddle,book_footright,book_tplodt");
+}
+
 function viewbook($target="_self",$ulink=true,$abstract=false) {
   include_once("FDL/Lib.Dir.php");
   global $action;
@@ -204,9 +210,15 @@ public function genpdf($target="_self",$ulink=true,$abstract=false) {
 	$this->modify();
       }
     }
-    $engine='odt';
     $urlindex=getParam("CORE_EXTERNURL");
-    $callback=$urlindex."?sole=Y&app=FDL&action=FDL_METHOD&redirect=no&method=ooo2pdf&id=".$this->id;
+
+    if ($this->getValue("book_tplodt")) {
+      $engine='odt';
+      $callback=$urlindex."?sole=Y&app=FDL&action=FDL_METHOD&redirect=no&method=ooo2pdf&id=".$this->id;
+    } else {
+      $engine='pdf';
+      $callback=$urlindex."?sole=Y&app=FDL&action=INSERTFILE&engine=$engine&vidout=$vid&name=".urlencode($this->title).".pdf";
+    }
     $ot=new TransformationEngine(getParam("TE_HOST"),getParam("TE_PORT"));
     $html = preg_replace(array("/SRC=\"([^\"]+)\"/e","/src=\"([^\"]+)\"/e"),
 			 "\$this->srcfile('\\1')",
