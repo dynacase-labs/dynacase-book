@@ -7,7 +7,9 @@ verifycomputedfiles('[docid]');
 <H2>[title]</h2>
 <h2>[TEXT:PDF file being processed]</h2>
 
-<img src="[IMG:workinprogress.png]"><br>
+<table  align="center"><tr><td>
+<img src="[IMG:bookpdf.png]"><br>
+<img style="margin-top:-90px" src="[IMG:workinprogress.png]"></tr></td></table>
  <span id="counter">.</span>
 </div>
 [ZONE FDL:HTMLFOOT]
