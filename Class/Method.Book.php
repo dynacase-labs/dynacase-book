@@ -223,7 +223,7 @@ public function genpdf($target="_self",$ulink=true,$abstract=false) {
     $html = preg_replace(array("/SRC=\"([^\"]+)\"/e","/src=\"([^\"]+)\"/e"),
 			 "\$this->srcfile('\\1')",
 			 $html);
-    $html = preg_replace(array('/size="([1-9])"/e','/size=([1-9])/e'), "", $html); // delete font size
+    $html = preg_replace(array('/size="([1-9])"/e','/size=([1-9])/e','/font-size: medium;/e'), "", $html); // delete font size
     $html = str_replace('<table ','<table style=" page-break-inside: avoid;" ', $html);
 
     $filename= uniqid("/var/tmp/txt-").'.html';
