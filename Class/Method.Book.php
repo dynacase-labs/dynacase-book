@@ -223,14 +223,13 @@ public function genpdf($target="_self",$ulink=true,$abstract=false) {
     $html = preg_replace(array("/SRC=\"([^\"]+)\"/e","/src=\"([^\"]+)\"/e"),
 			 "\$this->srcfile('\\1')",
 			 $html);
-    $html = preg_replace(array('/size="([1-9])"/e','/size=([1-9])/e'),
-			 "",
-			 $html);
+    $html = preg_replace(array('/size="([1-9])"/e','/size=([1-9])/e'), "", $html); // delete font size
     $html = str_replace('<table ','<table style=" page-break-inside: avoid;" ', $html);
 
     $filename= uniqid("/var/tmp/txt-").'.html';
     file_put_contents($filename,$html);
     $err=$ot->sendTransformation($engine,$vid,$filename,$callback,$info);
+   
     @unlink($filename);
     if ($err=="") {
       global $action;
@@ -340,6 +339,23 @@ function insertstyle($odt,$ott) {
   $dott=uniqid("/var/tmp/ott");  
   $cmd = sprintf("unzip  %s  -d %s >/dev/null",$ott , $dott );
   system($cmd);
+  /*
+  $domo=new DOMDocument();
+  $domo->load("$dodt/styles.xml");
+  $autoo=$domo->getElementsByTagNameNS("urn:oasis:names:tc:opendocument:xmlns:office:1.0","automatic-styles");
+  print count($autoo);
+    print $domo->saveXML($autoo->item(0));
+
+  $domt=new DOMDocument();
+  $domt->load("$dodt/styles.xml");
+  $autot=$domt->getElementsByTagNameNS("urn:oasis:names:tc:opendocument:xmlns:office:1.0","automatic-styles");
+  print count($autot);
+
+  $c=$domt->importNode($autoo->item(0),true);
+  $autot->item(0)->parentNode->insertBefore($c,$autot->item(0));
+  
+  */
+
 
   $cmd = sprintf("cp %s/styles.xml  %s >/dev/null",$dott , $dodt );
   system($cmd);
