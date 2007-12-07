@@ -364,14 +364,20 @@ function insertstyle($odt,$ott) {
   system($cmd);
   $cmd = sprintf("sed -i -e 's!href=\"../../../!href=\"/var/!g' %s/content.xml",$dodt);
   system($cmd);
+  if (is_dir("$dott/Pictures")) {
+    if (! is_dir("$dodt/Pictures")) mkdir("$dodt/Pictures");
+    $cmd = sprintf("cp -r %s/Pictures/*  %s/Pictures >/dev/null",$dott , $dodt );
+    system($cmd);
+  }
   $cmd = sprintf("cd %s;zip -r %s * >/dev/null",$dodt , $odt );
   system($cmd);
+
   
   $cmd = sprintf("/bin/rm -fr %s", $dodt );
-  system($cmd);
+  //system($cmd);
 
   $cmd = sprintf("/bin/rm -fr %s", $dott );
-  system($cmd);
+  //system($cmd);
   
 }
 function srcfile($src) {
