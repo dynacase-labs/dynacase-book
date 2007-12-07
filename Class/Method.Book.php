@@ -374,10 +374,10 @@ function insertstyle($odt,$ott) {
 
   
   $cmd = sprintf("/bin/rm -fr %s", $dodt );
-  //system($cmd);
+  system($cmd);
 
   $cmd = sprintf("/bin/rm -fr %s", $dott );
-  //system($cmd);
+  system($cmd);
   
 }
 function srcfile($src) {
