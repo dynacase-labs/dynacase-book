@@ -84,21 +84,7 @@ function genhtml($target="_self",$ulink=true,$abstract=false) {
     $this->lay->set("FL",$this->hftoooo($this->getValue("book_footleft")));
     $this->lay->set("FM",$this->hftoooo($this->getValue("book_footmiddle")));
     $this->lay->set("FR",$this->hftoooo($this->getValue("book_footright")));
-    $this->lay->set("toc",($this->getValue("book_toc")=="yes"));
-  
-    $base=getParam("CORE_EXTERNURL");
-
-    if (ereg("(https?)://([^/]*)",$base,$reg)) {  
-      $base=$reg[1].'://'.$reg[2].'/';
-    }
-  
-    global $_SERVER;
-    $login=$_SERVER["PHP_AUTH_USER"];
-    $pw=$_SERVER["PHP_AUTH_PW"];
-
-    if (substr($base,0,7)=="http://") $base=str_replace("http://","http://$login:$pw@",$base);
-    else if (substr($base,0,8)=="https://") $base=str_replace("https://","http://$login:$pw@",$base);
-    $this->lay->set("basehref","$base");
+    $this->lay->set("toc",($this->getValue("book_toc")=="yes"));    
   } else {    
     $this->lay->set("toc",false);
   }
@@ -210,7 +196,11 @@ public function genpdf($target="_self",$ulink=true,$abstract=false) {
 	$this->modify();
       }
     }
-    $urlindex=getParam("CORE_EXTERNURL");
+    $urlindex=getParam("TE_URLINDEX");
+    if ($urlindex=="") {
+      addWarningMsg(_("TE engine URL not set"));
+      return;      
+    }
 
     if ($this->getValue("book_tplodt")) {
       $engine='odt';
@@ -293,7 +283,7 @@ public function ooo2pdf() {
       if (ereg ("(.*)\|(.*)", $va, $reg)) $vid=$reg[2];
       
       $engine='pdf';
-      $urlindex=getParam("CORE_EXTERNURL");
+      $urlindex=getParam("TE_URLINDEX");
       $callback=$urlindex."?sole=Y&app=FDL&action=INSERTFILE&engine=$engine&vidout=$vid&name=".urlencode($this->title).".pdf";
       $ot=new TransformationEngine(getParam("TE_HOST"),getParam("TE_PORT"));
     
