@@ -13,7 +13,13 @@ DIV.tablesimple {
 DIV.chapters LI {
   white-space:nowrap;
 }
-
+IMG.button {
+  cursor:pointer;
+  border:1px transparent solid;
+}
+IMG.button:hover {  
+  border:1px [COLOR_B0] dotted;
+}
    </style>
 <script>document.needreload=true;</script>
 
@@ -39,16 +45,11 @@ function openiframe(event,th,docid) {
   var wfgtop;
   if (selchap != null) {
     selchap.className='iconone';
-
-    selchap.style.borderLeftStyle='solid';
-    selchap.style.borderLeftColor='[COLOR_C5]';
-    selchap.style.borderLeftWidth='2px';
   }
-  if (th) { 
-    th.className='icononesel';
-    selchap=th;
-    selchap.style.color='orange';
-  }
+   if (th) { 
+     th.className='icononesel';
+     selchap=th;
+   }
  
   var idf='chap_'+docid;
   var nf;
@@ -66,11 +67,8 @@ function openiframe(event,th,docid) {
       if (window.frames[idf]) {
 	
 	window.frames[idf].location.href='[CORE_STANDURL]&app=FDL&action=FDL_CARD&id='+docid;
-	//	lif=window.frames[idf].document.getElementsByTagName('frame');
-	//      lif=nf.contentDocument.getElementsByTagName('frame');
-	//	if (lif.length >0) {
-	//  isrc=lif[0].src;
-	//	}
+	if (selchap != null) selchap.style.color='[COLOR_B6]';	    	  
+	
       }
     }
     nf.style.display='';
@@ -85,6 +83,52 @@ function openiframe(event,th,docid) {
      tdi.appendChild(nf); 
      selifr=nf;
      resizeiframe();
+     if (selchap != null) selchap.style.color='[COLOR_B6]';              
+     
+  }
+}
+
+function editiframe(event,th,docid) {  
+  if (selchap != null) {
+    selchap.className='iconone';
+  }
+  if (th) { 
+    th.className='icononesel';
+    selchap=th;
+    selchap.style.color='[COLOR_C0]';
+  }
+ 
+  var idf='chap_'+docid;
+  var nf;
+  var reloadlist=false;
+  var regs1 = new RegExp('GENERIC_EDIT','g');
+  nf=document.getElementById(idf);
+
+  if (nf && (! regs1.test(nf.src))) reloadlist=true;
+  var lif=document.getElementsByTagName('iframe');
+  for (var i=0;i<lif.length;i++) {
+    lif[i].style.display='none';
+  }
+  if (nf) {
+    selifr=nf;
+    if (reloadlist) {
+      var isrc;
+      if (window.frames[idf]) {	
+	window.frames[idf].location.href='[CORE_STANDURL]&app=GENERIC&action=GENERIC_EDIT&id='+docid;	
+      }
+    }
+    nf.style.display='';
+    resizeiframe();    
+  } else {
+    var tdi=document.getElementById('tdiframe');
+     nf=document.createElement('iframe');
+     nf.id=idf;
+     nf.name=idf;
+     nf.className='ifonefam';
+     nf.src='[CORE_STANDURL]&app=GENERIC&action=GENERIC_EDIT&id='+docid;
+     tdi.appendChild(nf); 
+     selifr=nf;
+     resizeiframe();
   }
 }
 addEvent(window,"resize",resizeiframe);
@@ -94,7 +138,7 @@ addEvent(window,"resize",resizeiframe);
 <div class="chapters" id="chapters" style="overflow:auto">
 <ul style="padding-left:0px">
 [BLOCK CHAPTERS]
-<li style="list-style-type:none;margin-left:[level]px"><a class="tooltip" title="[chap_comment]" onclick="openiframe(event,this,'[id]')">[chap_level] [chap_title]</a></li>
+<li style="list-style-type:none;margin-left:[level]px">[IF icon]<img title="[TEXT:edit chapter]" class="button" needresize="1" width="[SIZE_IMG-XX-SMALL]" src="[icon]" onclick="editiframe(event,this.nextSibling,'[id]')" >[ENDIF icon][IFNOT icon]<img style="border:1px transparent solid" width="[SIZE_IMG-XX-SMALL]" src="Images/none.gif">[ENDIF icon]<a class="tooltip" title="[chap_comment]" onclick="openiframe(event,this,'[id]')">[chap_level] [chap_title]</a></li>
 [ENDBLOCK CHAPTERS]
 </ul>
 <hr width="50%">

@@ -19,9 +19,14 @@ function viewbook($target="_self",$ulink=true,$abstract=false) {
 
   $chapters = getChildDoc($this->dbaccess, 0,0,"ALL",$filter,$this->userid,"TABLE","CHAPTER",false,"");
   $this->lay->set("stylesheet",($this->getValue("book_tplodt")!=""));
-
+ 
   foreach ($chapters as $k=>$chap) {
     $chapters[$k]["level"]=(count(explode(".",$chap["chap_level"]))-1)*15;
+    if (controlTdoc($chap,"edit") && (($chap["locked"]==0)||(abs($chap["locked"])==$this->userid))) {
+      $chapters[$k]["icon"]=$this->getIcon($chap["icon"]);
+    } else {
+      $chapters[$k]["icon"]=false;
+    }
     $chapters[$k]["chap_comment"]=str_replace(array('"',"\n","\r"),
 					      array("rsquo;",'<br>',''),$chap["chap_comment"]);
   }
@@ -33,7 +38,7 @@ function viewbook($target="_self",$ulink=true,$abstract=false) {
 }
 
 /**
- * to sort group by name
+ * to sort chapters by level
  */
 static function _cmplevel($a,$b) {
   
@@ -56,6 +61,9 @@ function openbook($target="_self",$ulink=true,$abstract=false) {
   $tannx=$this->getContent(true,$filter);
 
 
+  foreach ($tannx as $k=>$chap) {
+    $tannx[$k]["icon"]=$this->getIcon($chap["icon"]);
+  }
 
   $this->lay->setBlockData("ANNX",$tannx);
   
