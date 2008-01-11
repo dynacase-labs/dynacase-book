@@ -1,4 +1,7 @@
+<style>
 
+
+</style>
 <script>document.needreload=true;</script>
 [ZONE FDL:VIEWFRAME?frameid=FR_BASIC]
 [IF stylesheet]
@@ -6,12 +9,8 @@
 [ENDIF stylesheet]
 [IFNOT stylesheet]
 <table style="width:100%;border:1px solid"><tr><td style="width:33%">[V_BOOK_HEADLEFT]</td><td style="width:33%;text-align:center">[V_BOOK_HEADMIDDLE]</td><td style="text-align:right">[V_BOOK_HEADRIGHT]</td></tr></table>[ENDIF stylesheet]
-<div style="text-align:left">
-<ul>
-[BLOCK CHAPTERS]
-<li style="list-style-type:none;margin-left:[level]px"><a class="tooltip" title="[chap_comment]" href="[CORE_STANDURL]app=FDL&action=FDL_CARD&id=[id]">[chap_level] [chap_title]</a></li>
-[ENDBLOCK CHAPTERS]
-</ul>
+<div style="text-align:center">
+<a title="[TEXT:Open book]"><img style="button" onclick="subwindow(300,600,'Book[ID]','[CORE_STANDURL]app=FDL&action=FDL_CARD&id=[ID]&zone=BOOK:OPENBOOK')" src="[IMG:openbook.png]"></a>
 </div>
 [IFNOT stylesheet]
 <table style="width:100%;border:1px solid"><tr><td style="width:33%">[V_BOOK_FOOTLEFT]</td><td style="width:33%;text-align:center">[V_BOOK_FOOTMIDDLE]</td><td style="text-align:right">[V_BOOK_FOOTRIGHT]</td></tr></table>[ENDIF stylesheet]

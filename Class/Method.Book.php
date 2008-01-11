@@ -13,28 +13,10 @@ function viewbook($target="_self",$ulink=true,$abstract=false) {
   global $action;
   $action->parent->AddJsRef($action->GetParam("CORE_PUBURL")."/FREEDOM/Layout/fdl_tooltip.js");
   
-  $this->viewdefaultcard($target,$ulink,$abstract);
-  $filter[]="chap_bookid=".$this->initid;
-  $filter[]="doctype!='T'";
-
-  $chapters = getChildDoc($this->dbaccess, 0,0,"ALL",$filter,$this->userid,"TABLE","CHAPTER",false,"");
   $this->lay->set("stylesheet",($this->getValue("book_tplodt")!=""));
- 
-  foreach ($chapters as $k=>$chap) {
-    $chapters[$k]["level"]=(count(explode(".",$chap["chap_level"]))-1)*15;
-    if (controlTdoc($chap,"edit") && (($chap["locked"]==0)||(abs($chap["locked"])==$this->userid))) {
-      $chapters[$k]["icon"]=$this->getIcon($chap["icon"]);
-    } else {
-      $chapters[$k]["icon"]=false;
-    }
-    $chapters[$k]["chap_comment"]=str_replace(array('"',"\n","\r"),
-					      array("rsquo;",'<br>',''),$chap["chap_comment"]);
-  }
-  uasort($chapters, array (get_class($this), "_cmplevel"));
-  
+  $this->viewdefaultcard($target,$ulink,$abstract);
 
- 
-  $this->lay->setBlockData("CHAPTERS",$chapters);
+  
 }
 
 /**
@@ -52,11 +34,34 @@ static function _cmplevel($a,$b) {
   return strcmp($iv1,$iv2);
 }
 
+function gentdm() {
+  $filter[]="chap_bookid=".$this->initid;
+  $filter[]="doctype!='T'";
+  $chapters = getChildDoc($this->dbaccess, 0,0,"ALL",$filter,$this->userid,"TABLE","CHAPTER",false,"");
+ 
+  foreach ($chapters as $k=>$chap) {
+    $chapters[$k]["level"]=(count(explode(".",$chap["chap_level"]))-1)*15;
+    if (controlTdoc($chap,"edit") && (($chap["locked"]==0)||(abs($chap["locked"])==$this->userid))) {
+      $chapters[$k]["icon"]=$this->getIcon($chap["icon"]);
+    } else {
+      $chapters[$k]["icon"]=false;
+    }
+    $chapters[$k]["chap_comment"]=str_replace(array('"',"\n","\r"),
+					      array("rsquo;",'<br>',''),$chap["chap_comment"]);
+  }
+  uasort($chapters, array (get_class($this), "_cmplevel"));
+  
 
+ 
+  $this->lay->setBlockData("CHAPTERS",$chapters);
+}
 function openbook($target="_self",$ulink=true,$abstract=false) {
   $this->viewbook($target,$ulink,$abstract);
+  $this->gentdm($target,$ulink,$abstract);
   
+
   $chapid=getFamIdFromName($this->dbaccess,"CHAPTER");
+  $filter=array();
   $filter[]="fromid != $chapid";
   $tannx=$this->getContent(true,$filter);
 
@@ -70,6 +75,7 @@ function openbook($target="_self",$ulink=true,$abstract=false) {
 }
 function genhtml($target="_self",$ulink=true,$abstract=false) {
   $this->viewbook($target,$ulink,$abstract);
+  $this->gentdm($target,$ulink,$abstract);
   $chapters=$this->lay->getBlockData("CHAPTERS");
   
   $chapter0=array();
@@ -218,6 +224,9 @@ public function genpdf($target="_self",$ulink=true,$abstract=false) {
       $callback=$urlindex."?sole=Y&app=FDL&action=INSERTFILE&engine=$engine&vidout=$vid&name=".urlencode($this->title).".pdf";
     }
     $ot=new TransformationEngine(getParam("TE_HOST"),getParam("TE_PORT"));
+    $html = preg_replace('/<font([^>]*)face="([^"]*)"/is',
+			 "<font\\1",
+			 $html);
     $html = preg_replace(array("/SRC=\"([^\"]+)\"/e","/src=\"([^\"]+)\"/e"),
 			 "\$this->srcfile('\\1')",
 			 $html);

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FREEDOM\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-04 10:54+0100\n"
+"POT-Creation-Date: 2008-01-11 11:31+0100\n"
 "PO-Revision-Date: 2003-06-23 11:01+0200\n"
 "Last-Translator: Eric Brison <eric.brison@anakeen.com>\n"
 "Language-Team: English <distrib@anakeen.com>\n"
@@ -14,10 +14,19 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Open book"
+msgstr ""
+
+msgid "edit chapter"
+msgstr ""
+
 msgid "PDF file being processed"
 msgstr ""
 
 msgid "TE engine not activated"
+msgstr ""
+
+msgid "TE engine URL not set"
 msgstr ""
 
 msgid "impossible conversion"
