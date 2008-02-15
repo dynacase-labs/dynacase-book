@@ -18,6 +18,18 @@ function viewbook($target="_self",$ulink=true,$abstract=false) {
 
   
 }
+/**
+ * Return list of chapters
+ * @return array of document array
+ */
+function getChapters() {
+  
+  $filter[]="chap_bookid=".$this->initid;
+  $filter[]="doctype!='T'";
+  $chapters = getChildDoc($this->dbaccess, 0,0,"ALL",$filter,$this->userid,"TABLE","CHAPTER",false,"");
+
+  return $chapters;
+}
 
 /**
  * to sort chapters by level
@@ -35,9 +47,8 @@ static function _cmplevel($a,$b) {
 }
 
 function gentdm() {
-  $filter[]="chap_bookid=".$this->initid;
-  $filter[]="doctype!='T'";
-  $chapters = getChildDoc($this->dbaccess, 0,0,"ALL",$filter,$this->userid,"TABLE","CHAPTER",false,"");
+
+  $chapters = $this->getChapters();
  
   foreach ($chapters as $k=>$chap) {
     $chapters[$k]["level"]=(count(explode(".",$chap["chap_level"]))-1)*15;

@@ -1,5 +1,18 @@
 <?php
 
+function preCreated() {
+  $book=new_doc($this->dbaccess,$this->getValue("chap_bookid"));
+  if ($book->isAlive()) {
+    if ($doc->locked == -1) { // it is revised document
+      $ldocid = $book->latestId();
+      if ($ldocid != $book->id) $book = new_Doc($this->dbaccess, $ldocid);
+    }
+    $err=$book->control("modify");
+    if ($err=="") return "";
+  }
+  
+  return _("need modify acl in book");
+  }
 
 function postModify() {
   $html=$this->getValue("chap_content");
