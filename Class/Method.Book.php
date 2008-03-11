@@ -404,7 +404,8 @@ function srcfile($src) {
   
   if (ereg("vid=([0-9]+)",$src,$reg)) {
     $info=vault_properties($reg[1]);
-    if ( ! in_array(fileextension($info->path),$vext)) return "";
+    if ( ! in_array(strtolower(fileextension($info->path)),$vext)) return "";
+    
     return 'src="file://'.$info->path.'"';
   }
 
