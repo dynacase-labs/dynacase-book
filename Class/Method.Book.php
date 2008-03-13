@@ -201,7 +201,7 @@ public function genpdf($target="_self",$ulink=true,$abstract=false) {
     $this->lay->set("docid",$this->id);
     $this->lay->set("title",$this->title);
     $va=$this->getValue("book_pdf");
-    if (ereg ("(.*)\|(.*)", $va, $reg)) {  
+    if (ereg (REGEXPFILE, $va, $reg)) {  
       $vid=$reg[2];
       
       $ofout=new VaultDiskStorage($this->dbaccess,$vid);
@@ -308,7 +308,7 @@ public function ooo2pdf() {
 
 
       $va=$this->getValue("book_pdf");
-      if (ereg ("(.*)\|(.*)", $va, $reg)) $vid=$reg[2];
+      if (ereg (REGEXPFILE, $va, $reg)) $vid=$reg[2];
       
       $engine='pdf';
       $urlindex=getParam("TE_URLINDEX");
@@ -412,7 +412,7 @@ function srcfile($src) {
   return "";
 }
 function getFileDate($va) {  
-  if (ereg ("(.*)\|(.*)", $va, $reg)) {  
+  if (ereg (REGEXPFILE, $va, $reg)) {  
     include_once("VAULT/Class.VaultDiskStorage.php");
     $vid=$reg[2];
     
