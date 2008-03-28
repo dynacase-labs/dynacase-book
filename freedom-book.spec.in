@@ -1,7 +1,7 @@
 #! /bin/rpm
 #
 #  File: libwhat.spec
-#  $Id: FREEDOM-BOOK.spec.in,v 1.3 2007/12/14 07:59:51 eric Exp $
+#  $Id: freedom-book.spec.in,v 1.1 2008/03/28 13:22:37 eric Exp $
 #
 #  This is the SPEC file for the What Users Module
 #  Anakeen What Application
@@ -54,7 +54,7 @@
 %{?rpost:%define releasepostfix %{rpost}}
 
 
-%define dirname BOOK
+%define dirname @APPNAME@
 Summary: Book family for construct book with chapters
 Name: @PACKAGE@
 Version: @VERSION@
@@ -68,6 +68,8 @@ URL: http://www.anakeen.com/
 Packager: Yannick Le Briquer <yannick.lebriquer@anakeen.com>
 BuildArchitectures: noarch
 BuildRoot: /tmp/anakeen-root
+Obsoletes:	FREEDOM-BOOK
+Provides:	FREEDOM-BOOK = @VERSION@
 PreReq: FREEDOM-LIB >= 2.9.4
 Requires: FREEDOM-USERCARD
 %description
