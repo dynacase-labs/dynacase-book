@@ -1,11 +1,11 @@
-Source: freedom-workspace
+Source: freedom-book
 Section: web
 Priority: extra
 Maintainer: yannick <yannick.lebriquer@anakeen.com>
 Build-Depends: debhelper (>= 5), autoconf
 Standards-Version: 3.7.2
 
-Package: freedom-workspace
+Package: freedom-book
 Architecture: all
 Depends: freedom-fckeditor, freedom-lib (>= 2.9.5)
 Description: Family Book and Chapter 
