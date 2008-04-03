@@ -4,6 +4,8 @@
 </style>
 <script>document.needreload=true;</script>
 [ZONE FDL:VIEWFRAME?frameid=FR_BASIC]
+[ZONE FDL:VIEWFRAME?frameid=BOOK_FR_INFO]
+
 [IF stylesheet]
 <table style="width:100%;border:1px solid"><tr><td style="width:33%;text-align:center">[L_BOOK_TPLODT] : [V_BOOK_TPLODT]</td></tr></table>
 [ENDIF stylesheet]
