@@ -1,5 +1,5 @@
 # ============================================
-# $Id: Makefile.in,v 1.4 2008/03/28 13:22:37 eric Exp $
+# $Id: Makefile.in,v 1.5 2008/06/02 08:21:38 jerome Exp $
 # ============================================
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
@@ -16,7 +16,7 @@ GZIP_ENV = --best
 
 export targetdir PACKAGE
 
-SUBDIR=  Class Zone Images
+SUBDIR=  Class Zone Images debian
 
 include $(utildir)/PubRule
 
