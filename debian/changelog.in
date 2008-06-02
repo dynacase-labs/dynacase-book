@@ -1,4 +1,4 @@
-freedom-workspace (@VERSION@-@RELEASE@) stable; urgency=low
+freedom-book (@VERSION@-@RELEASE@) stable; urgency=low
 
   * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
 
