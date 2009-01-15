@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<module name="freedom-book" disabled="no" version="@VERSION@" release="@RELEASE@">
+  <description>Book family to construct books with chapters.</description>
+  <requires>
+    <module name="freedom" />
+  </requires>
+</module>
