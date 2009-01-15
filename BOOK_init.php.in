@@ -1,0 +1,13 @@
+<?php
+// ---------------------------------------------------------------
+// $Id: BOOK_init.php.in,v 1.1 2009/01/15 15:52:11 eric Exp $
+// $Source: /home/cvsroot/anakeen/freedom/book/BOOK_init.php.in,v $
+// ---------------------------------------------------------------
+
+
+global $app_const;
+
+$app_const= array("INIT" => "yes",
+		  "VERSION" => "@VERSION@-@RELEASE@");
+
+?>
