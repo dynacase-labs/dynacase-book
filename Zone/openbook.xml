@@ -135,7 +135,7 @@ addEvent(window,"resize",resizeiframe);
 </script>
 <hr>
 <table id="maintable" style="width:100%;"><tr><td style="vertical-align:top;width:200px;border-right:solid black 1px">
-<div class="chapters" id="chapters" style="overflow:auto">
+<div class="chapters" id="chapters" style="overflow:auto;width:200px">
 <ul style="padding-left:0px">
 [BLOCK CHAPTERS]
 <li style="list-style-type:none;margin-left:[level]px">[IF icon]<img title="[TEXT:edit chapter]" class="button" needresize="1" width="[SIZE_IMG-XX-SMALL]" src="[icon]" onclick="editiframe(event,this.nextSibling,'[id]')" >[ENDIF icon][IFNOT icon]<img style="border:1px transparent solid" width="[SIZE_IMG-XX-SMALL]" src="Images/none.gif">[ENDIF icon]<a class="tooltip" title="[chap_comment]" onclick="openiframe(event,this,'[id]')">[chap_level] [chap_title]</a></li>
