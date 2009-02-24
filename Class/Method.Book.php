@@ -227,12 +227,14 @@ public function genpdf($target="_self",$ulink=true,$abstract=false) {
       return;      
     }
 
+    if (strstr($urlindex,'?')) $urlindex.='&';
+    else $urlindex.='?';
     if ($this->getValue("book_tplodt")) {
       $engine='odt';
-      $callback=$urlindex."?sole=Y&app=FDL&action=FDL_METHOD&redirect=no&method=ooo2pdf&id=".$this->id;
+      $callback=$urlindex."sole=Y&app=FDL&action=FDL_METHOD&redirect=no&method=ooo2pdf&id=".$this->id;
     } else {
       $engine='pdf';
-      $callback=$urlindex."?sole=Y&app=FDL&action=INSERTFILE&engine=$engine&vidout=$vid&name=".urlencode($this->title).".pdf";
+      $callback=$urlindex."sole=Y&app=FDL&action=INSERTFILE&engine=$engine&vidout=$vid&name=".urlencode($this->title).".pdf";
     }
     $ot=new TransformationEngine(getParam("TE_HOST"),getParam("TE_PORT"));
     $html = preg_replace('/<font([^>]*)face="([^"]*)"/is',
@@ -312,7 +314,10 @@ public function ooo2pdf() {
       
       $engine='pdf';
       $urlindex=getParam("TE_URLINDEX");
-      $callback=$urlindex."?sole=Y&app=FDL&action=INSERTFILE&engine=$engine&vidout=$vid&name=".urlencode($this->title).".pdf";
+
+      if (strstr($urlindex,'?')) $urlindex.='&';
+      else $urlindex.='?';
+      $callback=$urlindex."sole=Y&app=FDL&action=INSERTFILE&engine=$engine&vidout=$vid&name=".urlencode($this->title).".pdf";
       $ot=new TransformationEngine(getParam("TE_HOST"),getParam("TE_PORT"));
     
 
