@@ -187,7 +187,7 @@ public function genpdf($target="_self",$ulink=true,$abstract=false) {
     addWarningMsg(_("TE engine not activated"));
     return;
   }
-  if (@include_once("TE/Class.TEClient.php")) {
+  if (@include_once("WHAT/Class.TEClient.php")) {
     include_once("FDL/Class.TaskRequest.php");
     global $action;
     $action->parent->AddJsRef($action->GetParam("CORE_PUBURL")."/BOOK/Layout/genpdf.js");
@@ -293,7 +293,7 @@ public function ooo2pdf() {
     addWarningMsg(_("TE engine not activated"));
     return;
   }
-  if (@include_once("TE/Class.TEClient.php")) {
+  if (@include_once("WHAT/Class.TEClient.php")) {
     include_once("FDL/Class.TaskRequest.php");
 
     $tid= GetHttpVars("tid");
