@@ -6,22 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FREEDOM-BOOK\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-11 11:31+0100\n"
-"PO-Revision-Date: 2008-01-11 11:32+0100\n"
+"POT-Creation-Date: 2009-09-24 11:18+0200\n"
+"PO-Revision-Date: 2009-09-24 11:16+0200\n"
 "Last-Translator: Eric Brison <eric.brison@anakeen.com>\n"
 "Language-Team: French <distrib@anakeen.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Open book"
-msgstr "Ouvrir le livre"
-
-msgid "edit chapter"
-msgstr "Éditer le chapitre"
-
-msgid "PDF file being processed"
-msgstr "Production du PDF en cours"
+msgid "need modify acl in book"
+msgstr "le droit modifié est nécessaire dans le livre"
 
 msgid "TE engine not activated"
 msgstr ""
@@ -29,11 +23,34 @@ msgstr ""
 msgid "TE engine URL not set"
 msgstr ""
 
-msgid "impossible conversion"
-msgstr ""
+msgid "latest revision"
+msgstr "La plus récente"
 
-msgid "TE engine activate but TE-CLIENT not found"
+msgid "the collating is not up to date. Need collate it"
 msgstr ""
+"L'assemblage n'est pas à jour. \n"
+"Il est nécessaire de  lancer une nouvelle production"
+
+msgid "Conversion aborted: cannot compose zip archive"
+msgstr "Convertion abondonnée : l'archive zip ne peut être contruite"
+
+msgid "Conversion aborted: cannot create zip archive"
+msgstr "Conversion abondonnée : l'archive zip ne peut être créée"
+
+msgid "PDF file being processed"
+msgstr "Production du PDF en cours"
+
+msgid "Open book"
+msgstr "Ouvrir le livre"
+
+msgid "edit chapter"
+msgstr "Éditer le chapitre"
+
+msgid "fixed revision"
+msgstr "Version figée"
+
+msgid "book"
+msgstr "livre"
 
 #~ msgid "Table of content"
 #~ msgstr "Table des matières"
@@ -41,26 +58,14 @@ msgstr ""
 #~ msgid "affected"
 #~ msgstr "affecté"
 
-#~ msgid "recorded"
-#~ msgstr "enregistré"
-
 #~ msgid "resolved"
 #~ msgstr "résolu"
-
-#~ msgid "rejected"
-#~ msgstr "rejeté"
 
 #~ msgid "synonyme"
 #~ msgstr "synonyme"
 
-#~ msgid "draft"
-#~ msgstr "brouillon"
-
 #~ msgid "TChanged"
 #~ msgstr "autres transitions"
-
-#~ msgid "Trecorded"
-#~ msgstr "vers enregistré"
 
 #~ msgid "fft %s"
 #~ msgstr "fft %s"

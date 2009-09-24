@@ -24,7 +24,7 @@ function viewbook($target="_self",$ulink=true,$abstract=false) {
  */
 function getChapters() {
   
-  $filter[]="chap_bookid=".$this->initid;
+  $filter[]="chap_bookid='".$this->initid."'";
   $filter[]="doctype!='T'";
   $chapters = getChildDoc($this->dbaccess, 0,0,"ALL",$filter,$this->userid,"TABLE","CHAPTER",false,"");
 

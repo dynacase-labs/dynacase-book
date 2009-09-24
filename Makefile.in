@@ -16,7 +16,7 @@ GZIP_ENV = --best
 
 export targetdir PACKAGE
 
-SUBDIR=  Class Zone Images debian
+SUBDIR=  Class Zone External Images debian
 
 pages_not_xml = info.xml
 

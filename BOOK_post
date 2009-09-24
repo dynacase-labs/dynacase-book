@@ -18,5 +18,6 @@ fi
 if [ "$1" = "U" ] ; then
 
   $wpub/wsh.php --api=freedom_import --file=$wpub/BOOK/book.ods
+  $wpub/wsh.php --api=freedom_import --file=$wpub/BOOK/collating.ods
 
 fi

@@ -3,23 +3,56 @@
 function specRefresh() {
   $tchaps=$this->getTvalue("coll_chapid");
   $tattrids=$this->getTvalue("coll_attrid");
+  $fstates=$this->getTvalue("coll_statefilter");
   $tfiles=array();
   $tdates=array();
   foreach ($tchaps as $k=>$v) {
     $tfiles[$k]=_('no file');
     $tdates[$k]="";
-    if ($v) {
-      $d=new_doc($this->dbaccess,$v);
-      if ($d->isAlive()) {
-	if ($tattrids[$k]) {
-	  $f=$d->getValue(trim(strtok($tattrids[$k],'(')));
-	  $tfiles[$k]=$f;
-	  $tdates[$k]=$this->getFileInfo($f,"mdate");
+    $tstates[$k]="";
+    if ($v) {          
+      $fstate=strtok($fstates[$k],' ');
+      if ($fstate == "_latest_") $d=new_doc($this->dbaccess,$v,true);
+      else $d=new_doc($this->dbaccess,$v);
+      if ($fstate) {
+	if (($fstate != "_latest_") && ($fstate != "_fixed_")) {
+	  $lid=$d->getRevisionState($fstate,true);
+	  if ($lid) $d=new_doc($this->dbaccess,$lid);
+	  else $d=false;
+	}
+      }
+      if ($d && $d->isAlive()) {
+	$aid=trim(strtok($tattrids[$k],' '));
+	$tchaps[$k]=$d->id;
+	if (! $aid) {
+	  $af=$d->GetFirstFileAttributes();
+	  if ($af) {
+	    print_r2($af);
+	    $aid=$af->id;
+	    $tattrids[$k]=sprintf("%s (%s)",$af->id,$af->getLabel());
+	    $this->setValue("coll_attrid",$tattrids);
+	  }
+	}
+
+	if ($aid) {
+	  $f=$d->getValue($aid);
+	  if ($f) {
+	    $tfiles[$k]=$f;
+	    $tdates[$k]=$this->getFileInfo($f,"mdate");
+	  }
+	  $state=$d->getState();
+	  if ($d->locked == -1) {
+	    $tstates[$k]=$state?_($state):"";
+	  } else {
+	    $tstates[$k]=$d->getStateActivity(_("latest revision"));
+	  }
 	}
       }
     }
   }
 
+  $this->setValue("coll_chapid",$tchaps);
+  $this->setValue("coll_chapstate",$tstates);
   $this->setValue("coll_chapfile",$tfiles);
   $this->setValue("coll_chapfiledate",$tdates);
   $ott=$this->getValue("coll_allott");
@@ -49,7 +82,8 @@ function maxdate($t) {
   if ($ki >=0) return $t[$ki];
   return "";
 }
-function mergeOdt() {
+
+function collating() {
   include_once("FDL/Lib.Vault.php");
   $ott=$this->getValue("coll_allott");
   if ($ott) {
