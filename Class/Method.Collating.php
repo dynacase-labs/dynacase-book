@@ -27,7 +27,6 @@ function specRefresh() {
 	if (! $aid) {
 	  $af=$d->GetFirstFileAttributes();
 	  if ($af) {
-	    print_r2($af);
 	    $aid=$af->id;
 	    $tattrids[$k]=sprintf("%s (%s)",$af->id,$af->getLabel());
 	    $this->setValue("coll_attrid",$tattrids);
