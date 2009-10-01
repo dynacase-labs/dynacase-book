@@ -222,11 +222,15 @@ public function genpdf($target="_self",$ulink=true,$abstract=false) {
       }
     }
           
-    $urlindex=getOpenTeUrl();
     if ($this->getValue("book_tplodt")) {
       $engine='odt';
+      $urlindex=getOpenTeUrl(array("app"=>"FDL",
+				   "action"=>"FDL_METHOD",
+				   "method"=>"ooo2pdf",
+				   "id"=>$this->id));
       $callback=$urlindex."&sole=Y&app=FDL&action=FDL_METHOD&redirect=no&method=ooo2pdf&id=".$this->id;
     } else {
+      $urlindex=getOpenTeUrl();
       $engine='pdf';
       $callback=$urlindex."&sole=Y&app=FDL&action=INSERTFILE&engine=$engine&vidout=$vid&name=".urlencode($this->title).".pdf";
     }

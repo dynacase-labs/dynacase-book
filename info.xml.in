@@ -5,6 +5,7 @@
 
   <requires>
     <module name="freedom" />
+    <module name="freedom-core" version="2.14.1" comp="ge"/>
   </requires>
 
   <post-install>
