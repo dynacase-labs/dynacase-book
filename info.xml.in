@@ -22,8 +22,11 @@
     <process command="programs/post_migration BOOK" />
     <process command="programs/update_catalog" />
   </post-upgrade>
- <pre-install>
-   <check type="phpclass"  class="ZipArchive"><help>Zip class is not present (including in php 5.2)</help></check>
- </pre-install>    
+  <pre-install>
+    <check type="phpclass"  class="ZipArchive"><help>Zip class is not present (including in php 5.2)</help></check>
+  </pre-install>
+  <pre-upgrade>
+    <check type="phpclass"  class="ZipArchive"><help>Zip class is not present (including in php 5.2)</help></check>
+  </pre-upgrade>       
 
 </module>
