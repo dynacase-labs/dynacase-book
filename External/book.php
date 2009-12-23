@@ -11,8 +11,9 @@ function lbookstates($dbaccess, $docid, $name="") {
     $wdoc=new_doc($dbaccess,$doc->wid,false);
     if ($wdoc && method_exists($wdoc,"getStates")) {
       $states=$wdoc->getStates();      
+      $pattern = preg_quote($name);
       foreach ($states as $k=>$v) {
-	if (($name == "") ||    (eregi("$name", $v , $reg))) $tr[]=array($v.' ('._($v).')',$v.' ('._($v).')');
+	if (($name == "") ||    (preg_match("/$pattern/i", $v , $reg))) $tr[]=array($v.' ('._($v).')',$v.' ('._($v).')');
       }
     } 
   } 
