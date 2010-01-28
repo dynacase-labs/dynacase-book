@@ -4,7 +4,7 @@
  *
  * @author Anakeen 2002
  * @version $Id: Class.Doc.php,v 1.562 2009/01/14 09:18:05 eric Exp $
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html GNU Affero General Public License
  * @package FREEDOM
  */
 /**

@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @author Anakeen
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html GNU Affero General Public License
+ */
+
+
 function specRefresh() {
   $tchaps=$this->getTvalue("coll_chapid");
   $tattrids=$this->getTvalue("coll_attrid");
