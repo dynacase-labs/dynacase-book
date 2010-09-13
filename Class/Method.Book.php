@@ -416,8 +416,76 @@ function srcfile($src) {
     return 'src="file://'.$info->path.'"';
   }
 
-  return "";
+  $src = html_entity_decode($src);
+  $url = parse_url($src);
+
+  $argv = array();
+  foreach( explode('&', $url['query']) as $arg) {
+    $v = explode('=', $arg);
+    if( $v[0] !== '' ) {
+      $argv[$v[0]] = rawurldecode($v[1]);
+    }
+  }
+
+  $docid = false;
+  $attrid = false;
+  $index = -1;
+
+  if( preg_match("/^\s*$/", $argv['docid']) ) {
+    $this->addComment(__CLASS__."::".__FUNCTION__." ".sprintf("Empty '%s' in '%s'.", 'docid', $src), HISTO_ERROR);
+    return "";
+  }
+  $docid = $argv['docid'];
+
+  if( preg_match("/^\s*$/", $argv['attrid']) ) {
+    $this->addComment(__CLASS__."::".__FUNCTION__." ".sprintf("Empty '%s' in '%s'.", 'attrid', $src), HISTO_ERROR);
+    return "";
+  }
+  $attrid = $argv['attrid'];
+
+  if( preg_match("/^\s*$/", $argv['index']) ) {
+    $this->addComment(__CLASS__."::".__FUNCTION__." ".sprintf("Empty '%s' in '%s'.", 'index', $src), HISTO_ERROR);
+    return "";
+  }
+  $index = $argv['index'];
+
+  $doc = new_Doc($this->dbaccess, $docid);
+  if( ! is_object($doc) || ! $doc->isAlive() ) {
+    $this->addComment(__CLASS__."::".__FUNCTION__." ".sprintf("Document with id '%s' does not exists or is not alive.", $docid), HISTO_ERROR);
+    return "";
+  }
+
+  $file = '';
+  if( $index < 0 ) {
+    $file = $doc->getValue($attrid);
+  } else {
+    $tvalue = $doc->getTValue($attrid);
+    if( $index >= count($tvalue) ) {
+      $this->addComment(__CLASS__."::".__FUNCTION__." ".sprintf("Out of range index '%s' for attrid '%s' in document '%s'.", $index, $attrid, $docid), HISTO_ERROR);
+      return "";
+    }
+    $file = $tvalue[$index];
+  }
+  if( $file == '' ) {
+    $this->addComment(__CLASS__."::".__FUNCTION__." ".sprintf("Empty attr '%s[%s]' in document '%s'.", $attrid, $index, $docid), HISTO_ERROR);
+    return "";
+  }
+
+  $path = $this->vault_filename_fromvalue($file, true);
+  if( $path == '' ) {
+    $this->addComment(__CLASS__."::".__FUNCTION__." ".sprintf("Empty path for file in attr '%s[%s]' in document '%s'.", $attrid, $index, $docid), HISTO_ERROR);
+    return "";
+  }
+  if( ! file_exists($path) ) {
+    $this->addComment(__CLASS__."::".__FUNCTION__." ".sprintf("File '%s' in attr '%s[%s]' in document '%s' does not exists.", $path, $attrid, $index, $docid), HISTO_ERROR);
+    return "";
+  }
+
+  $path = sprintf('src="file://%s"', $path);
+
+  return $path;
 }
+
 function getFileDate($va) {  
   if (preg_match(PREGEXPFILE, $va, $reg)) {  
     include_once("VAULT/Class.VaultDiskStorage.php");
