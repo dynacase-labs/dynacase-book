@@ -30,6 +30,10 @@
   </pre-upgrade>
 
   <changelog>
+  	
+    <version number="0.2.1" date="2010-09-15">
+      <change title="Fix incorporate images" url="http://dev.freedom-ecm.org/versions/show/44"/>        
+    </version>
     <version number="0.2.0-4" date="2010-03-03">
       <change title="Added infopath link" />
     </version>
