@@ -84,7 +84,7 @@ TABLE {page-break-inside: avoid}
 [ENDIF toc]
 [BLOCK CHAPTERS]
 <h[hlevel]>[chap_level] [chap_title]</h[hlevel]>
-<div>[chap_content]</div>
+[chap_content]
 [ENDBLOCK CHAPTERS]
 
 [IF ispdf][IFNOT stylesheet]

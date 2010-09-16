@@ -5,7 +5,23 @@
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html GNU Affero General Public License
  */
 
+/**
+ * Specials methods for BOOK family
+ *
+ * @author Anakeen
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html GNU Affero General Public License
+ * @package FREEDOM
+ * @subpackage BOOK
+ */
 
+/**
+ * @begin-method-ignore
+ * this part will be deleted when construct document class until end-method-ignore
+ */
+Class _BOOK extends Dir {
+        /*
+         * @end-method-ignore
+         */
 public $defaultview="BOOK:VIEWBOOK";
 
 function specRefresh() {
@@ -497,4 +513,13 @@ function getFileDate($va) {
   }
 }
 
+        /**
+        * @begin-method-ignore
+        * this part will be deleted when construct document class until end-method-ignore
+        */
+}
+
+/*
+ * @end-method-ignore
+ */
 ?>
