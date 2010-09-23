@@ -18,7 +18,7 @@ VERSION=`cat VERSION`
 AC_SUBST(RELEASE)
 RELEASE=`cat RELEASE`
 AC_SUBST(PACKAGE)
-PACKAGE=freedom-book
+PACKAGE=dynacase-book
 AC_SUBST(APPNAME)
 APPNAME=BOOK
 AC_SUBST(PACKAGELIB)
@@ -71,5 +71,4 @@ AC_ARG_WITH(dbport,
 [  --with-dbport=port number  the database port (default 5432)], DBPORT=$withval)
 
 
-AC_OUTPUT(Makefile \
-        freedom-book.spec info.xml BOOK_init.php)
+AC_OUTPUT(Makefile info.xml BOOK_init.php)
