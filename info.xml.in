@@ -1,11 +1,14 @@
 <?xml version="1.0"?>
-<module name="freedom-book" disabled="no" version="@VERSION@" release="@RELEASE@" infopath="http://www.freedom-ecm.org/modules/freedom-book/freedom-book">
+<module name="dynacase-book" disabled="no" version="@VERSION@" release="@RELEASE@" license="@LICENSE@" infopath="http://www.dynacase.org/modules/dynacase-book/dynacase-book">
 
   <description>Book family to construct books with chapters.</description>
 
+  <replaces>
+        <module name="freedom-book" />
+  </replaces>
+
   <requires>
-    <module name="freedom" />
-    <module name="freedom-core" version="2.14.1" comp="ge"/>
+    <module name="dynacase-platform" />
   </requires>
 
   <post-install>
@@ -32,7 +35,7 @@
   <changelog>
   	
     <version number="0.2.1" date="2010-09-15">
-      <change title="Fix incorporate images" url="http://dev.freedom-ecm.org/versions/show/44"/>        
+      <change title="Fix incorporate images" url="http://dev.dynacase.org/versions/show/44"/>
     </version>
     <version number="0.2.0-4" date="2010-03-03">
       <change title="Added infopath link" />

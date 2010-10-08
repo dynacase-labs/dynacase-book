@@ -16,7 +16,7 @@ GZIP_ENV = --best
 
 export targetdir PACKAGE
 
-SUBDIR=  Class Zone External Images debian
+SUBDIR=  Class Zone External Images 
 
 pages_not_xml = info.xml
 pages_not_php=fam2po.php po2js.php
