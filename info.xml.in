@@ -13,16 +13,16 @@
 
   <post-install>
     <process command="programs/record_application BOOK" />
-    <process command="./wsh.php --api=freedom_import --file=./BOOK/book.ods" />
-    <process command="./wsh.php --api=freedom_import --file=./BOOK/collating.ods" />
+    <process command="./wsh.php --api=importDocuments --file=./BOOK/book.ods" />
+    <process command="./wsh.php --api=importDocuments --file=./BOOK/collating.ods" />
     <process command="programs/update_catalog" />
   </post-install>
 
   <post-upgrade>
     <process command="programs/pre_migration BOOK" />
     <process command="programs/record_application BOOK" />
-    <process command="./wsh.php --api=freedom_import --file=./BOOK/book.ods" />
-    <process command="./wsh.php --api=freedom_import --file=./BOOK/collating.ods" />
+    <process command="./wsh.php --api=importDocuments --file=./BOOK/book.ods" />
+    <process command="./wsh.php --api=importDocuments --file=./BOOK/collating.ods" />
     <process command="programs/post_migration BOOK" />
     <process command="programs/update_catalog" />
   </post-upgrade>
