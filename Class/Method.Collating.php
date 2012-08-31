@@ -98,7 +98,9 @@ Class _COLLATING extends Doc
         if ($ki >= 0) return $t[$ki];
         return "";
     }
-    
+    /**
+     * @apiExpose
+     */
     function collating()
     {
         include_once ("FDL/Lib.Vault.php");
