@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ -z "$pgservice_core" ]; then
+	echo "Undefined or empty pgservice_core!"
+	exit 1
+fi
+
+PGSERVICE="$pgservice_core" psql -f - <<EOF
+BEGIN;
+UPDATE docfam SET defval = replace(defval, '[fdl_subfam|yes]', '') WHERE name = 'BOOK';
+COMMIT;
+EOF
+RET=$?
+if [ $RET -ne 0 ]; then
+	echo "Error migrating BOOK's defval!"
+	exit $RET
+fi
