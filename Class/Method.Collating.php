@@ -23,6 +23,7 @@ Class _COLLATING extends Doc
         $fstates = $this->getTvalue("coll_statefilter");
         $tfiles = array();
         $tdates = array();
+        $tstates = array();
         foreach ($tchaps as $k => $v) {
             $tfiles[$k] = _('no file');
             $tdates[$k] = "";
@@ -82,6 +83,7 @@ Class _COLLATING extends Doc
         $maxd = FrenchDateToUnixTs($max);
         $prod = FrenchDateToUnixTs($this->getFileInfo($this->getValue("coll_allodt") , "mdate"));
         if ($maxd > $prod) return _("the collating is not up to date. Need collate it");
+        return "";
     }
     
     function maxdate($t)
@@ -105,6 +107,7 @@ Class _COLLATING extends Doc
     {
         include_once ("FDL/Lib.Vault.php");
         $ott = $this->getValue("coll_allott");
+        $err = "";
         if ($ott) {
             $outfile = uniqid(sys_get_temp_dir() . "/merge") . ".zip";
             $tfiles = $this->getTvalue("coll_chapfile");

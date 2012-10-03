@@ -32,6 +32,7 @@ Class openDocument
         if (file_exists($stylexml)) {
             $this->styles = file_get_contents($contentxml);
         }
+        return "";
     }
     
     function getOfficeTag($tag)
@@ -50,6 +51,7 @@ Class openDocument
         if (is_object($this->domContent)) {
             return $this->domContent->saveXML();
         }
+        return "";
     }
     
     function changeContent($xml)
@@ -72,6 +74,7 @@ Class openDocument
             }
             return copy($img, $dirpictures . basename($img));
         }
+        return "";
     }
     
     function getPictures()
@@ -101,6 +104,7 @@ Class openDocument
         $cmd = sprintf("cd %s;zip -r %s * >/dev/null", $this->cibledir, $cible);
         
         system($cmd);
+        return "";
     }
     function purge()
     {

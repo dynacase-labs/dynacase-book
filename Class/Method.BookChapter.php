@@ -21,7 +21,7 @@ Class _CHAPTER extends Doc
     {
         $book = new_doc($this->dbaccess, $this->getValue("chap_bookid"));
         if ($book->isAlive()) {
-            if ($doc->locked == - 1) { // it is revised document
+            if ($book->locked == - 1) { // it is revised document
                 $ldocid = $book->latestId();
                 if ($ldocid != $book->id) $book = new_Doc($this->dbaccess, $ldocid);
             }
