@@ -17,13 +17,19 @@ Class _BOOK extends Dir
      * @end-method-ignore
     */
     public $defaultview = "BOOK:VIEWBOOK";
+    private $ispdf;
     
     function specRefresh()
     {
         
         $this->AddParamRefresh("book_tplodt", "book_headleft,book_headmiddle,book_headright,book_footleft,book_footmiddle,book_footright,book_tplodt");
     }
-    
+    /**
+     * @param string $target
+     * @param bool $ulink
+     * @param bool $abstract
+     * @templateController
+     */
     function viewbook($target = "_self", $ulink = true, $abstract = false)
     {
         include_once ("FDL/Lib.Dir.php");
@@ -61,7 +67,9 @@ Class _BOOK extends Dir
         
         return strcmp($iv1, $iv2);
     }
-    
+    /**
+     * @templateController
+     */
     function gentdm()
     {
         
@@ -91,6 +99,12 @@ Class _BOOK extends Dir
         
         $this->lay->setBlockData("CHAPTERS", $chapters);
     }
+    /**
+     * @param string $target
+     * @param bool $ulink
+     * @param bool $abstract
+     * @templateController
+     */
     function openbook($target = "_self", $ulink = true, $abstract = false)
     {
         $this->viewbook($target, $ulink, $abstract);
@@ -107,6 +121,12 @@ Class _BOOK extends Dir
         
         $this->lay->setBlockData("ANNX", $tannx);
     }
+    /**
+     * @param string $target
+     * @param bool $ulink
+     * @param bool $abstract
+     * @templateController
+     */
     function genhtml($target = "_self", $ulink = true, $abstract = false)
     {
         $this->viewbook($target, $ulink, $abstract);
@@ -154,7 +174,10 @@ Class _BOOK extends Dir
         $hf = str_replace("##PAGE##", "<SDFIELD TYPE=PAGE SUBTYPE=RANDOM FORMAT=PAGE>1</SDFIELD>", $hf);
         return $hf;
     }
-    
+    /**
+     * @param Dir $copyfrom
+     * @return string|void
+     */
     function postCopy(&$copyfrom)
     {
         include_once ("FDL/Lib.Dir.php");
@@ -165,6 +188,7 @@ Class _BOOK extends Dir
         
         $this->deleteValue("book_pdf");
         $this->deleteValue("book_datepdf");
+        $err = "";
         foreach ($chapters as $k => $chap) {
             $nc = getDocObject($this->dbaccess, $chap);
             $copy = $nc->Copy();
@@ -200,7 +224,7 @@ Class _BOOK extends Dir
     }
     /**
      * send a request to TE to convert file to PDF
-     *
+     * @templateController
      *
      */
     public function genpdf($target = "_self", $ulink = true, $abstract = false)
@@ -234,11 +258,13 @@ Class _BOOK extends Dir
                 $filename = uniqid("/var/tmp/conv") . ".txt";
                 $nc = file_put_contents($filename, "-");
                 $vf = newFreeVaultFile($this->dbaccess);
+                $vid = 0;
                 $err = $vf->Store($filename, false, $vid);
                 unlink($filename);
                 if ($err == "") {
                     $vf->storage->teng_state = 2;
-                    $vf->storage->modify();;
+                    $vf->storage->modify();
+                    $mime = "application/pdf";
                     $this->setValue("book_pdf", "$mime|$vid");
                     $this->modify();
                 }
@@ -273,6 +299,7 @@ Class _BOOK extends Dir
             
             $filename = uniqid("/var/tmp/txt-") . '.html';
             file_put_contents($filename, $html);
+            $info = "";
             $err = $ot->sendTransformation($engine, $vid, $filename, $callback, $info);
             
             @unlink($filename);
@@ -331,6 +358,7 @@ Class _BOOK extends Dir
                 }
                 
                 $va = $this->getValue("book_pdf");
+                $vid = "";
                 if (preg_match(PREGEXPFILE, $va, $reg)) $vid = $reg[2];
                 
                 $engine = 'pdf';
@@ -416,6 +444,7 @@ Class _BOOK extends Dir
         
         $cmd = sprintf("/bin/rm -fr %s", $dott);
         system($cmd);
+        return "";
     }
     function srcfile($src)
     {
@@ -515,6 +544,7 @@ Class _BOOK extends Dir
             
             return $ofout->mdate;
         }
+        return "";
     }
     /**
      * @begin-method-ignore
