@@ -11,12 +11,12 @@ applib = FDL
 rootprefix=$(RPM_BUILD_ROOT)
 export pubdir utildir appname applib
 
-TAR = gtar
+TAR = tar
 GZIP_ENV = --best
 
 export targetdir PACKAGE
 
-SUBDIR=  Class Zone External Images 
+SUBDIR=  Class Zone External Images
 
 pages_not_xml = info.xml
 pages_not_php=fam2po.php po2js.php
@@ -24,7 +24,7 @@ pages_not_php=fam2po.php po2js.php
 include $(utildir)/PubRule
 
 DISTFILES += $(SUBDIR)  $(wildcard *.ods) \
-            VERSION RELEASE 
+            VERSION RELEASE
 
 pages_ods = $(patsubst %.ods,$(pubdir)/$(style)/$(appname)/%.ods,$(wildcard *.ods))
 
