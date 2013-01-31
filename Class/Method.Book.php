@@ -32,11 +32,11 @@ Class _BOOK extends Dir
      */
     function viewbook($target = "_self", $ulink = true, $abstract = false)
     {
-        include_once ("FDL/Lib.Dir.php");
+        include_once "FDL/Lib.Dir.php";
         global $action;
         $action->parent->AddJsRef($action->GetParam("CORE_PUBURL") . "/FREEDOM/Layout/fdl_tooltip.js");
         
-        $this->lay->set("stylesheet", ($this->getValue("book_tplodt") != ""));
+        $this->lay->set("stylesheet", ($this->getRawValue("book_tplodt") != ""));
         $this->viewdefaultcard($target, $ulink, $abstract);
     }
     /**
@@ -48,7 +48,12 @@ Class _BOOK extends Dir
         
         $filter[] = "chap_bookid='" . $this->initid . "'";
         $filter[] = "doctype!='T'";
-        $chapters = getChildDoc($this->dbaccess, 0, 0, "ALL", $filter, $this->userid, "TABLE", "CHAPTER", false, "");
+        $search = new SearchDoc("", "CHAPTER");
+        foreach ($filter as $currentFilter) {
+            $search->addFilter($currentFilter);
+        }
+        
+        $chapters = $search->search();
         
         return $chapters;
     }
@@ -62,8 +67,12 @@ Class _BOOK extends Dir
         $tv2 = array_pad((explode(".", $b['chap_level'])) , 5, 0);
         $iv1 = '';
         $iv2 = '';
-        foreach ($tv1 as $k => $v) $iv1.= sprintf("%02d", $v);
-        foreach ($tv2 as $k => $v) $iv2.= sprintf("%02d", $v);
+        foreach ($tv1 as $v) {
+            $iv1.= sprintf("%02d", $v);
+        }
+        foreach ($tv2 as $v) {
+            $iv2.= sprintf("%02d", $v);
+        }
         
         return strcmp($iv1, $iv2);
     }
@@ -145,15 +154,15 @@ Class _BOOK extends Dir
         $this->lay->setBlockData("CHAPTERS", $chapters);
         $this->lay->set("booktitle", $this->title);
         $this->lay->set("has0", (count($chapter0) > 0));
-        $this->lay->set("stylesheet", ($this->ispdf && ($this->getValue("book_tplodt") != "")));
+        $this->lay->set("stylesheet", ($this->ispdf && ($this->getRawValue("book_tplodt") != "")));
         if ($this->ispdf) {
-            $this->lay->set("HL", $this->hftoooo($this->getValue("book_headleft")));
-            $this->lay->set("HM", $this->hftoooo($this->getValue("book_headmiddle")));
-            $this->lay->set("HR", $this->hftoooo($this->getValue("book_headright")));
-            $this->lay->set("FL", $this->hftoooo($this->getValue("book_footleft")));
-            $this->lay->set("FM", $this->hftoooo($this->getValue("book_footmiddle")));
-            $this->lay->set("FR", $this->hftoooo($this->getValue("book_footright")));
-            $this->lay->set("toc", ($this->getValue("book_toc") == "yes"));
+            $this->lay->set("HL", $this->hftoooo($this->getRawValue("book_headleft")));
+            $this->lay->set("HM", $this->hftoooo($this->getRawValue("book_headmiddle")));
+            $this->lay->set("HR", $this->hftoooo($this->getRawValue("book_headright")));
+            $this->lay->set("FL", $this->hftoooo($this->getRawValue("book_footleft")));
+            $this->lay->set("FM", $this->hftoooo($this->getRawValue("book_footmiddle")));
+            $this->lay->set("FR", $this->hftoooo($this->getRawValue("book_footright")));
+            $this->lay->set("toc", ($this->getRawValue("book_toc") == "yes"));
         } else {
             $this->lay->set("toc", false);
         }
@@ -180,23 +189,28 @@ Class _BOOK extends Dir
      */
     function postCopy(&$copyfrom)
     {
-        include_once ("FDL/Lib.Dir.php");
+        include_once "FDL/Lib.Dir.php";
         $filter[] = "chap_bookid=" . $copyfrom->initid;
         $filter[] = "doctype!='T'";
         
-        $chapters = getChildDoc($this->dbaccess, 0, 0, "ALL", $filter, $this->userid, "TABLE", "CHAPTER");
+        $search = new SearchDoc("", "CHAPTER");
+        foreach ($filter as $currentFilter) {
+            $search->addFilter($currentFilter);
+        }
         
-        $this->deleteValue("book_pdf");
-        $this->deleteValue("book_datepdf");
+        $chapters = $search->search();
+        
+        $this->clearValue("book_pdf");
+        $this->clearValue("book_datepdf");
         $err = "";
-        foreach ($chapters as $k => $chap) {
+        foreach ($chapters as $chap) {
             $nc = getDocObject($this->dbaccess, $chap);
-            $copy = $nc->Copy();
+            $copy = $nc->duplicate();
             if (!is_object($copy)) $err.= $copy;
             else {
                 $copy->setValue("chap_bookid", $this->initid);
                 $copy->modify();
-                $this->Addfile($copy->initid);
+                $this->insertDocument($copy->initid);
             }
         }
         
@@ -204,19 +218,24 @@ Class _BOOK extends Dir
         $filter = array();
         $filter[] = "fromid != $chapid";
         $tannx = $copyfrom->getContent(true, $filter);
-        foreach ($tannx as $k => $v) {
-            $this->Addfile($v["initid"]);
+        foreach ($tannx as $v) {
+            $this->insertDocument($v["initid"]);
         }
     }
     function postDelete()
     {
-        include_once ("FDL/Lib.Dir.php");
+        include_once "FDL/Lib.Dir.php";
         $filter[] = "chap_bookid=" . $this->initid;
         $filter[] = "doctype!='T'";
         
-        $chapters = getChildDoc($this->dbaccess, 0, 0, "ALL", $filter, $this->userid, "TABLE", "CHAPTER");
+        $search = new SearchDoc("", "CHAPTER");
+        foreach ($filter as $currentFilter) {
+            $search->addFilter($currentFilter);
+        }
+        
+        $chapters = $search->search();
         $err = "";
-        foreach ($chapters as $k => $chap) {
+        foreach ($chapters as $chap) {
             $nc = getDocObject($this->dbaccess, $chap);
             $err.= $nc->delete();
         }
@@ -227,16 +246,16 @@ Class _BOOK extends Dir
      * @templateController
      *
      */
-    public function genpdf($target = "_self", $ulink = true, $abstract = false)
+    public function genpdf()
     {
-        include_once ("FDL/Lib.Vault.php");
+        include_once "FDL/Lib.Vault.php";
         $tea = getParam("TE_ACTIVATE");
         if ($tea != "yes") {
             addWarningMsg(_("TE engine not activated"));
             return;
         }
         if (@include_once ("WHAT/Class.TEClient.php")) {
-            include_once ("FDL/Class.TaskRequest.php");
+            include_once "FDL/Class.TaskRequest.php";
             global $action;
             $action->parent->AddJsRef($action->GetParam("CORE_PUBURL") . "/BOOK/Layout/genpdf.js");
             
@@ -246,7 +265,7 @@ Class _BOOK extends Dir
             
             $this->lay->set("docid", $this->id);
             $this->lay->set("title", $this->title);
-            $va = $this->getValue("book_pdf");
+            $va = $this->getRawValue("book_pdf");
             if (preg_match(PREGEXPFILE, $va, $reg)) {
                 $vid = $reg[2];
                 
@@ -256,7 +275,7 @@ Class _BOOK extends Dir
             } else {
                 // create first
                 $filename = uniqid("/var/tmp/conv") . ".txt";
-                $nc = file_put_contents($filename, "-");
+                file_put_contents($filename, "-");
                 $vf = newFreeVaultFile($this->dbaccess);
                 $vid = 0;
                 $err = $vf->Store($filename, false, $vid);
@@ -270,7 +289,7 @@ Class _BOOK extends Dir
                 }
             }
             
-            if ($this->getValue("book_tplodt")) {
+            if ($this->getRawValue("book_tplodt")) {
                 $engine = 'odt';
                 $urlindex = getOpenTeUrl(array(
                     "app" => "FDL",
@@ -312,14 +331,13 @@ Class _BOOK extends Dir
                 $tr->comment = $info["comment"];
                 $tr->uid = $this->userid;
                 $tr->uname = $action->user->firstname . " " . $action->user->lastname;
-                $err = $tr->Add();
+                $tr->Add();
             } else {
                 $vf = initVaultAccess();
                 $filename = uniqid("/var/tmp/txt-" . $vid . '-');
                 file_put_contents($filename, $err);
-                //$vf->rename($vidout,"toto.txt");
                 $vf->Retrieve($vid, $info);
-                $err = $vf->Save($filename, false, $vid);
+                $vf->Save($filename, false, $vid);
                 @unlink($filename);
                 $vf->rename($vid, _("impossible conversion") . ".txt");
                 $vf->storage->teng_state = - 2;
@@ -336,15 +354,15 @@ Class _BOOK extends Dir
      */
     public function ooo2pdf()
     {
-        include_once ("FDL/insertfile.php");
-        include_once ("FDL/Lib.Vault.php");
+        include_once "FDL/insertfile.php";
+        include_once "FDL/Lib.Vault.php";
         $tea = getParam("TE_ACTIVATE");
         if ($tea != "yes") {
             addWarningMsg(_("TE engine not activated"));
             return;
         }
         if (@include_once ("WHAT/Class.TEClient.php")) {
-            include_once ("FDL/Class.TaskRequest.php");
+            include_once "FDL/Class.TaskRequest.php";
             
             $tid = GetHttpVars("tid");
             
@@ -352,12 +370,12 @@ Class _BOOK extends Dir
             $err = getTEFile($tid, $filename, $info);
             if ($err == "") {
                 // add style sheet
-                $ott = $this->getValue("book_tplodt");
+                $ott = $this->getRawValue("book_tplodt");
                 if ($ott) {
                     $this->insertstyle($filename, $this->vault_filename("book_tplodt", true));
                 }
                 
-                $va = $this->getValue("book_pdf");
+                $va = $this->getRawValue("book_pdf");
                 $vid = "";
                 if (preg_match(PREGEXPFILE, $va, $reg)) $vid = $reg[2];
                 
@@ -378,14 +396,13 @@ Class _BOOK extends Dir
                     $tr->comment = $info["comment"];
                     $tr->uid = $this->userid;
                     $tr->uname = $action->user->firstname . " " . $action->user->lastname;
-                    $err = $tr->Add();
+                    $tr->Add();
                 } else {
                     $vf = initVaultAccess();
                     $filename = uniqid("/var/tmp/txt-" . $vid . '-');
                     file_put_contents($filename, $err);
-                    //$vf->rename($vidout,"toto.txt");
                     $vf->Retrieve($vid, $info);
-                    $err = $vf->Save($filename, false, $vid);
+                    $vf->Save($filename, false, $vid);
                     @unlink($filename);
                     $vf->rename($vid, _("impossible conversion") . ".txt");
                     $vf->storage->teng_state = - 2;
@@ -407,22 +424,6 @@ Class _BOOK extends Dir
         $dott = uniqid("/var/tmp/ott");
         $cmd = sprintf("unzip  %s  -d %s >/dev/null", $ott, $dott);
         system($cmd);
-        /*
-        $domo=new DOMDocument();
-        $domo->load("$dodt/styles.xml");
-        $autoo=$domo->getElementsByTagNameNS("urn:oasis:names:tc:opendocument:xmlns:office:1.0","automatic-styles");
-        print count($autoo);
-        print $domo->saveXML($autoo->item(0));
-        
-        $domt=new DOMDocument();
-        $domt->load("$dodt/styles.xml");
-        $autot=$domt->getElementsByTagNameNS("urn:oasis:names:tc:opendocument:xmlns:office:1.0","automatic-styles");
-        print count($autot);
-        
-        $c=$domt->importNode($autoo->item(0),true);
-        $autot->item(0)->parentNode->insertBefore($c,$autot->item(0));
-        
-        */
         
         $cmd = sprintf("cp %s/styles.xml  %s >/dev/null", $dott, $dodt);
         system($cmd);
@@ -448,7 +449,6 @@ Class _BOOK extends Dir
     }
     function srcfile($src)
     {
-        global $ifiles;
         $vext = array(
             "gif",
             "png",
@@ -475,57 +475,52 @@ Class _BOOK extends Dir
             }
         }
         
-        $docid = false;
-        $attrid = false;
-        $index = - 1;
-        
         if (preg_match("/^\s*$/", $argv['docid'])) {
-            $this->addComment(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("Empty '%s' in '%s'.", 'docid', $src) , HISTO_ERROR);
+            $this->addHistoryEntry(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("Empty '%s' in '%s'.", 'docid', $src) , HISTO_ERROR);
             return "";
         }
         $docid = $argv['docid'];
         
         if (preg_match("/^\s*$/", $argv['attrid'])) {
-            $this->addComment(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("Empty '%s' in '%s'.", 'attrid', $src) , HISTO_ERROR);
+            $this->addHistoryEntry(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("Empty '%s' in '%s'.", 'attrid', $src) , HISTO_ERROR);
             return "";
         }
         $attrid = $argv['attrid'];
         
         if (preg_match("/^\s*$/", $argv['index'])) {
-            $this->addComment(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("Empty '%s' in '%s'.", 'index', $src) , HISTO_ERROR);
+            $this->addHistoryEntry(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("Empty '%s' in '%s'.", 'index', $src) , HISTO_ERROR);
             return "";
         }
         $index = $argv['index'];
         
         $doc = new_Doc($this->dbaccess, $docid);
         if (!is_object($doc) || !$doc->isAlive()) {
-            $this->addComment(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("Document with id '%s' does not exists or is not alive.", $docid) , HISTO_ERROR);
+            $this->addHistoryEntry(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("Document with id '%s' does not exists or is not alive.", $docid) , HISTO_ERROR);
             return "";
         }
         
-        $file = '';
         if ($index < 0) {
             $file = $doc->getValue($attrid);
         } else {
             $tvalue = $doc->getTValue($attrid);
             if ($index >= count($tvalue)) {
-                $this->addComment(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("Out of range index '%s' for attrid '%s' in document '%s'.", $index, $attrid, $docid) , HISTO_ERROR);
+                $this->addHistoryEntry(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("Out of range index '%s' for attrid '%s' in document '%s'.", $index, $attrid, $docid) , HISTO_ERROR);
                 return "";
             }
             $file = $tvalue[$index];
         }
         if ($file == '') {
-            $this->addComment(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("Empty attr '%s[%s]' in document '%s'.", $attrid, $index, $docid) , HISTO_ERROR);
+            $this->addHistoryEntry(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("Empty attr '%s[%s]' in document '%s'.", $attrid, $index, $docid) , HISTO_ERROR);
             return "";
         }
         
         $path = $this->vault_filename_fromvalue($file, true);
         if ($path == '') {
-            $this->addComment(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("Empty path for file in attr '%s[%s]' in document '%s'.", $attrid, $index, $docid) , HISTO_ERROR);
+            $this->addHistoryEntry(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("Empty path for file in attr '%s[%s]' in document '%s'.", $attrid, $index, $docid) , HISTO_ERROR);
             return "";
         }
         if (!file_exists($path)) {
-            $this->addComment(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("File '%s' in attr '%s[%s]' in document '%s' does not exists.", $path, $attrid, $index, $docid) , HISTO_ERROR);
+            $this->addHistoryEntry(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("File '%s' in attr '%s[%s]' in document '%s' does not exists.", $path, $attrid, $index, $docid) , HISTO_ERROR);
             return "";
         }
         
@@ -537,7 +532,7 @@ Class _BOOK extends Dir
     function getFileDate($va)
     {
         if (preg_match(PREGEXPFILE, $va, $reg)) {
-            include_once ("VAULT/Class.VaultDiskStorage.php");
+            include_once "VAULT/Class.VaultDiskStorage.php";
             $vid = $reg[2];
             
             $ofout = new VaultDiskStorage($this->dbaccess, $vid);
