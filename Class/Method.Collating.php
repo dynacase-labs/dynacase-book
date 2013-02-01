@@ -18,9 +18,9 @@ Class _COLLATING extends Doc
     */
     function specRefresh()
     {
-        $tchaps = $this->getTvalue("coll_chapid");
-        $tattrids = $this->getTvalue("coll_attrid");
-        $fstates = $this->getTvalue("coll_statefilter");
+        $tchaps = $this->getMultipleRawValues("coll_chapid");
+        $tattrids = $this->getMultipleRawValues("coll_attrid");
+        $fstates = $this->getMultipleRawValues("coll_statefilter");
         $tfiles = array();
         $tdates = array();
         $tstates = array();
@@ -52,7 +52,7 @@ Class _COLLATING extends Doc
                     }
                     
                     if ($aid) {
-                        $f = $d->getValue($aid);
+                        $f = $d->getRawValue($aid);
                         if ($f) {
                             $tfiles[$k] = $f;
                             $tdates[$k] = $this->getFileInfo($f, "mdate");
@@ -72,17 +72,19 @@ Class _COLLATING extends Doc
         $this->setValue("coll_chapstate", $tstates);
         $this->setValue("coll_chapfile", $tfiles);
         $this->setValue("coll_chapfiledate", $tdates);
-        $ott = $this->getValue("coll_allott");
         
-        $tdates[] = $this->getFileInfo($this->getValue("coll_allott") , "mdate");
+        $tdates[] = $this->getFileInfo($this->getRawValue("coll_allott") , "mdate");
         
         $max = $this->maxdate($tdates);
-        if ($max) $this->setValue("coll_datemodif", $max);
-        else $this->deleteValue("coll_datemodif");
+        if ($max) {
+            $this->setValue("coll_datemodif", $max);
+        } else $this->clearValue("coll_datemodif");
         
         $maxd = FrenchDateToUnixTs($max);
-        $prod = FrenchDateToUnixTs($this->getFileInfo($this->getValue("coll_allodt") , "mdate"));
-        if ($maxd > $prod) return _("the collating is not up to date. Need collate it");
+        $prod = FrenchDateToUnixTs($this->getFileInfo($this->getRawValue("coll_allodt") , "mdate"));
+        if ($maxd > $prod) {
+            return _("the collating is not up to date. Need collate it");
+        }
         return "";
     }
     
@@ -105,12 +107,12 @@ Class _COLLATING extends Doc
      */
     function collating()
     {
-        include_once ("FDL/Lib.Vault.php");
-        $ott = $this->getValue("coll_allott");
+        include_once "FDL/Lib.Vault.php";
+        $ott = $this->getRawValue("coll_allott");
         $err = "";
         if ($ott) {
             $outfile = uniqid(sys_get_temp_dir() . "/merge") . ".zip";
-            $tfiles = $this->getTvalue("coll_chapfile");
+            $tfiles = $this->getMultipleRawValues("coll_chapfile");
             $zip = new ZipArchive;
             if ($zip->open($outfile, ZIPARCHIVE::CREATE) === true) {
                 $file = $this->vault_filename_fromvalue($ott, true);
@@ -134,7 +136,7 @@ Class _COLLATING extends Doc
                 $odtfile = uniqid(sys_get_temp_dir() . "/merge") . ".odt";
                 $err = convertFile($outfile, "mergeodt", $odtfile, $info);
                 if ($err == "") {
-                    $this->storeFile("coll_allodt", $odtfile, $this->getTitle() . ".odt");
+                    $this->setFile("coll_allodt", $odtfile, $this->getTitle() . ".odt");
                     $err = $this->modify();
                 }
                 @unlink($odtfile);
@@ -146,11 +148,11 @@ Class _COLLATING extends Doc
     
     function _mergeOdt_old()
     {
-        include_once ("BOOK/Class.OpenDocument.php");
-        $ott = $this->getValue("coll_allott");
+        include_once "BOOK/Class.OpenDocument.php";
+        $ott = $this->getRawValue("coll_allott");
         if ($ott) {
             
-            $tfiles = $this->getTvalue("coll_chapfile");
+            $tfiles = $this->getMultipleRawValues("coll_chapfile");
             
             $this->ott = new openDocument($this->vault_filename_fromvalue($ott, true));
             
@@ -172,10 +174,7 @@ Class _COLLATING extends Doc
             }
             $cible = uniqid("/var/tmp/odf") . ".odt";
             $this->ott->saveAs($cible);
-            $this->storeFile("coll_allodt", $cible);
-            //    $this->ott->purge();
-            //    unlink($cible);
-            
+            $this->setFile("coll_allodt", $cible);
         }
     }
     /**
