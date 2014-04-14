@@ -19,10 +19,10 @@ Class _BOOK extends Dir
     public $defaultview = "BOOK:VIEWBOOK";
     private $ispdf;
     
-    function specRefresh()
+    function postRefresh()
     {
-        
         $this->AddParamRefresh("book_tplodt", "book_headleft,book_headmiddle,book_headright,book_footleft,book_footmiddle,book_footright,book_tplodt");
+        return parent::postRefresh();
     }
     /**
      * @param string $target
