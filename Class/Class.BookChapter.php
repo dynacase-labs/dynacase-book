@@ -7,11 +7,9 @@
 /**
  * Specials methods for CHAPTER family
  */
-/**
- * @begin-method-ignore
- * this part will be deleted when construct document class until end-method-ignore
- */
-Class _CHAPTER extends Doc
+namespace Dcp\Book;
+
+class Chapter extends \Dcp\Family\Document
 {
     /*
      * @end-method-ignore
@@ -19,6 +17,9 @@ Class _CHAPTER extends Doc
     
     function preCreated()
     {
+        /**
+         * @var Book $book
+         */
         $book = new_doc($this->dbaccess, $this->getRawValue("chap_bookid"));
         if ($book->isAlive()) {
             if ($book->locked == - 1) { // it is revised document
@@ -40,12 +41,4 @@ Class _CHAPTER extends Doc
         $err = $this->modify();
         return $err;
     }
-    /**
-     * @begin-method-ignore
-     * this part will be deleted when construct document class until end-method-ignore
-     */
 }
-/*
- * @end-method-ignore
-*/
-?>
