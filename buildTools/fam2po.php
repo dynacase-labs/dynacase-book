@@ -5,7 +5,6 @@
  *
  * @author Anakeen 2000 
  * @version $Id: fam2po.php,v 1.2 2010-03-11 12:31:46 eric Exp $
- * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html GNU Affero General Public License
  * @package DCP
  * @subpackage 
  */

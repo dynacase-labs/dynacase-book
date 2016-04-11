@@ -1,7 +1,6 @@
 <?php
 /*
  * @author Anakeen
- * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html GNU Affero General Public License
  * @package FDL
  */
 /**
@@ -9,7 +8,6 @@
  *
  * @author Anakeen 2000
  * @version $Id: fam2po.php,v 1.11 2010-02-18 07:59:07 eric Exp $
- * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html GNU Affero General Public License
  * @package FREEDOM
  * @subpackage
  */
