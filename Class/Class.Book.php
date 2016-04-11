@@ -7,11 +7,9 @@
 /**
  * Specials methods for BOOK family
  */
-/**
- * @begin-method-ignore
- * this part will be deleted when construct document class until end-method-ignore
- */
-Class _BOOK extends Dir
+namespace Dcp\Book;
+
+Class Book extends \Dcp\Family\Dir
 {
     /*
      * @end-method-ignore
@@ -41,6 +39,7 @@ Class _BOOK extends Dir
     }
     /**
      * Return list of chapters
+     * @throws \Dcp\Db\Exception
      * @return array of document array
      */
     function getChapters()
@@ -48,7 +47,7 @@ Class _BOOK extends Dir
         
         $filter[] = "chap_bookid='" . $this->initid . "'";
         $filter[] = "doctype!='T'";
-        $search = new SearchDoc("", "CHAPTER");
+        $search = new \SearchDoc("", "CHAPTER");
         foreach ($filter as $currentFilter) {
             $search->addFilter($currentFilter);
         }
@@ -112,6 +111,7 @@ Class _BOOK extends Dir
      * @param string $target
      * @param bool $ulink
      * @param bool $abstract
+     * @throws \Dcp\Db\Exception
      * @templateController
      */
     function openbook($target = "_self", $ulink = true, $abstract = false)
@@ -134,6 +134,7 @@ Class _BOOK extends Dir
      * @param string $target
      * @param bool $ulink
      * @param bool $abstract
+     * @throws \Dcp\Db\Exception
      * @templateController
      */
     function genhtml($target = "_self", $ulink = true, $abstract = false)
@@ -184,7 +185,9 @@ Class _BOOK extends Dir
         return $hf;
     }
     /**
-     * @param Dir $copyfrom
+     * @param \Dir $copyfrom
+     * @throws \Dcp\Exception
+     * @throws \Dcp\Db\Exception
      * @return string|void
      */
     function postCopy(&$copyfrom)
@@ -193,7 +196,7 @@ Class _BOOK extends Dir
         $filter[] = "chap_bookid=" . $copyfrom->initid;
         $filter[] = "doctype!='T'";
         
-        $search = new SearchDoc("", "CHAPTER");
+        $search = new \SearchDoc("", "CHAPTER");
         foreach ($filter as $currentFilter) {
             $search->addFilter($currentFilter);
         }
@@ -204,6 +207,9 @@ Class _BOOK extends Dir
         $this->clearValue("book_datepdf");
         $err = "";
         foreach ($chapters as $chap) {
+            /**
+             * @var \Doc $nc
+             */
             $nc = getDocObject($this->dbaccess, $chap);
             $copy = $nc->duplicate();
             if (!is_object($copy)) $err.= $copy;
@@ -228,7 +234,7 @@ Class _BOOK extends Dir
         $filter[] = "chap_bookid=" . $this->initid;
         $filter[] = "doctype!='T'";
         
-        $search = new SearchDoc("", "CHAPTER");
+        $search = new \SearchDoc("", "CHAPTER");
         foreach ($filter as $currentFilter) {
             $search->addFilter($currentFilter);
         }
@@ -236,6 +242,9 @@ Class _BOOK extends Dir
         $chapters = $search->search();
         $err = "";
         foreach ($chapters as $chap) {
+            /**
+             * @var \Doc $nc
+             */
             $nc = getDocObject($this->dbaccess, $chap);
             $err.= $nc->delete();
         }
@@ -254,7 +263,7 @@ Class _BOOK extends Dir
             addWarningMsg(_("TE engine not activated"));
             return;
         }
-        if (@include_once ("WHAT/Class.TEClient.php")) {
+        if (\Dcp\Autoloader::classExists('Dcp\TransformationEngine\Client')) {
             include_once "FDL/Class.TaskRequest.php";
             global $action;
             $action->parent->AddJsRef($action->GetParam("CORE_PUBURL") . "/BOOK/Layout/genpdf.js");
@@ -269,13 +278,16 @@ Class _BOOK extends Dir
             if (preg_match(PREGEXPFILE, $va, $reg)) {
                 $vid = $reg[2];
                 
-                $ofout = new VaultDiskStorage($this->dbaccess, $vid);
+                $ofout = new \VaultDiskStorage($this->dbaccess, $vid);
                 $ofout->teng_state = 2;
                 $ofout->modify();
             } else {
                 // create first
                 $filename = uniqid("/var/tmp/conv") . ".txt";
                 file_put_contents($filename, "-");
+                /**
+                 * @var \VaultFile $vf
+                 */
                 $vf = newFreeVaultFile($this->dbaccess);
                 $vid = 0;
                 $err = $vf->Store($filename, false, $vid);
@@ -303,7 +315,7 @@ Class _BOOK extends Dir
                 $engine = 'pdf';
                 $callback = $urlindex . "&sole=Y&app=FDL&action=INSERTFILE&engine=$engine&vidout=$vid&name=" . urlencode($this->title) . ".pdf";
             }
-            $ot = new TransformationEngine(getParam("TE_HOST") , getParam("TE_PORT"));
+            $ot = new \Dcp\TransformationEngine\Client(getParam("TE_HOST") , getParam("TE_PORT"));
             $html = preg_replace('/<font([^>]*)face="([^"]*)"/is', "<font\\1", $html);
             $html = preg_replace(array(
                 "/SRC=\"([^\"]+)\"/e",
@@ -324,7 +336,7 @@ Class _BOOK extends Dir
             @unlink($filename);
             if ($err == "") {
                 global $action;
-                $tr = new TaskRequest($this->dbaccess);
+                $tr = new \TaskRequest($this->dbaccess);
                 $tr->tid = $info["tid"];
                 $tr->fkey = $vid;
                 $tr->status = $info["status"];
@@ -336,7 +348,8 @@ Class _BOOK extends Dir
                 $vf = initVaultAccess();
                 $filename = uniqid("/var/tmp/txt-" . $vid . '-');
                 file_put_contents($filename, $err);
-                $vf->Retrieve($vid, $info);
+                $info = new \VaultFileInfo();
+                $vf->retrieve($vid, $info);
                 $vf->Save($filename, false, $vid);
                 @unlink($filename);
                 $vf->rename($vid, _("impossible conversion") . ".txt");
@@ -361,7 +374,7 @@ Class _BOOK extends Dir
             addWarningMsg(_("TE engine not activated"));
             return;
         }
-        if (@include_once ("WHAT/Class.TEClient.php")) {
+        if (\Dcp\Autoloader::classExists('Dcp\TransformationEngine\Client')) {
             include_once "FDL/Class.TaskRequest.php";
             
             $tid = GetHttpVars("tid");
@@ -383,13 +396,13 @@ Class _BOOK extends Dir
                 
                 $urlindex = getOpenTeUrl();
                 $callback = $urlindex . "&sole=Y&app=FDL&action=INSERTFILE&engine=$engine&vidout=$vid&name=" . urlencode($this->title) . ".pdf";
-                $ot = new TransformationEngine(getParam("TE_HOST") , getParam("TE_PORT"));
+                $ot = new \Dcp\TransformationEngine\Client(getParam("TE_HOST") , getParam("TE_PORT"));
                 
                 $err = $ot->sendTransformation($engine, $vid, $filename, $callback, $info);
                 @unlink($filename);
                 if ($err == "") {
                     global $action;
-                    $tr = new TaskRequest($this->dbaccess);
+                    $tr = new \TaskRequest($this->dbaccess);
                     $tr->tid = $info["tid"];
                     $tr->fkey = $vid;
                     $tr->status = $info["status"];
@@ -398,6 +411,9 @@ Class _BOOK extends Dir
                     $tr->uname = $action->user->firstname . " " . $action->user->lastname;
                     $tr->Add();
                 } else {
+                    /**
+                     * @var \VaultFile $vf
+                     */
                     $vf = initVaultAccess();
                     $filename = uniqid("/var/tmp/txt-" . $vid . '-');
                     file_put_contents($filename, $err);
@@ -457,7 +473,7 @@ Class _BOOK extends Dir
             "bmp"
         );
         
-        if (preg_match("/vid=([0-9]+)/", $src, $reg)) {
+        if (preg_match('/vid=([0-9]+)/', $src, $reg)) {
             $info = vault_properties($reg[1]);
             if (!in_array(strtolower(fileextension($info->path)) , $vext)) return "";
             
@@ -475,24 +491,27 @@ Class _BOOK extends Dir
             }
         }
         
-        if (preg_match("/^\s*$/", $argv['docid'])) {
+        if (preg_match('/^\s*$/', $argv['docid'])) {
             $this->addHistoryEntry(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("Empty '%s' in '%s'.", 'docid', $src) , HISTO_ERROR);
             return "";
         }
         $docid = $argv['docid'];
         
-        if (preg_match("/^\s*$/", $argv['attrid'])) {
+        if (preg_match('/^\s*$/', $argv['attrid'])) {
             $this->addHistoryEntry(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("Empty '%s' in '%s'.", 'attrid', $src) , HISTO_ERROR);
             return "";
         }
         $attrid = $argv['attrid'];
         
-        if (preg_match("/^\s*$/", $argv['index'])) {
+        if (preg_match('/^\s*$/', $argv['index'])) {
             $this->addHistoryEntry(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("Empty '%s' in '%s'.", 'index', $src) , HISTO_ERROR);
             return "";
         }
         $index = $argv['index'];
-        
+
+        /**
+         * @var \Doc $doc
+         */
         $doc = new_Doc($this->dbaccess, $docid);
         if (!is_object($doc) || !$doc->isAlive()) {
             $this->addHistoryEntry(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("Document with id '%s' does not exists or is not alive.", $docid) , HISTO_ERROR);
@@ -500,9 +519,9 @@ Class _BOOK extends Dir
         }
         
         if ($index < 0) {
-            $file = $doc->getValue($attrid);
+            $file = $doc->getRawValue($attrid);
         } else {
-            $tvalue = $doc->getTValue($attrid);
+            $tvalue = $doc->getMultipleRawValues($attrid);
             if ($index >= count($tvalue)) {
                 $this->addHistoryEntry(__CLASS__ . "::" . __FUNCTION__ . " " . sprintf("Out of range index '%s' for attrid '%s' in document '%s'.", $index, $attrid, $docid) , HISTO_ERROR);
                 return "";
@@ -535,18 +554,11 @@ Class _BOOK extends Dir
             include_once "VAULT/Class.VaultDiskStorage.php";
             $vid = $reg[2];
             
-            $ofout = new VaultDiskStorage($this->dbaccess, $vid);
+            $ofout = new \VaultDiskStorage($this->dbaccess, $vid);
             
             return $ofout->mdate;
         }
         return "";
     }
-    /**
-     * @begin-method-ignore
-     * this part will be deleted when construct document class until end-method-ignore
-     */
+    
 }
-/*
- * @end-method-ignore
-*/
-?>

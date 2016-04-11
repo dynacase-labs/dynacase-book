@@ -8,6 +8,8 @@
  * Document Object Definition
  */
 
+namespace Dcp\Book;
+
 Class openDocument
 {
     public $content = "";
@@ -19,13 +21,13 @@ Class openDocument
         
         $this->cibledir = uniqid("/var/tmp/odf");
         
-        $cmd = sprintf("unzip  %s  -d %s >/dev/null", $odsfile, $this->cibledir);
+        $cmd = sprintf("unzip  %s  -d %s >/dev/null", escapeshellarg($odsfile) , escapeshellarg($this->cibledir));
         system($cmd);
         
         $contentxml = $this->cibledir . "/content.xml";
         if (file_exists($contentxml)) {
             $this->content = file_get_contents($contentxml);
-            $this->domContent = new DOMDocument();
+            $this->domContent = new \DOMDocument();
             $this->domContent->loadXML($this->content);
         }
         $stylexml = $this->cibledir . "/styles.xml";
@@ -101,7 +103,7 @@ Class openDocument
         if (file_exists($cible)) return "file $cible must not be present";
         
         $this->changeContent($this->getContent());
-        $cmd = sprintf("cd %s;zip -r %s * >/dev/null", $this->cibledir, $cible);
+        $cmd = sprintf("cd %s;zip -r %s * >/dev/null", escapeshellarg($this->cibledir) , escapeshellarg($cible));
         
         system($cmd);
         return "";
@@ -112,7 +114,7 @@ Class openDocument
             $contentxml = $this->cibledir . "/content.xml";
             if (file_exists($contentxml)) {
                 $this->changeContent($this->getContent());
-                $cmd = sprintf("/bin/rm -fr %s  >/dev/null", $this->cibledir);
+                $cmd = sprintf("/bin/rm -fr %s  >/dev/null", escapeshellarg($this->cibledir));
                 
                 system($cmd);
             }
@@ -121,6 +123,9 @@ Class openDocument
     
     function innerXML(&$node)
     {
+        /**
+         * @var \DOMNode $node
+         */
         if (!$node) return false;
         $document = $node->ownerDocument;
         $nodeAsString = $document->saveXML($node);
@@ -128,4 +133,3 @@ Class openDocument
         return $match[1];
     }
 }
-?>
